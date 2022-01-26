@@ -108,7 +108,13 @@ const App = ({
 
   // get if the current user is verified or not
   useEffect(() => {
-    setIsUserVerified(userData.user.emailVerified);
+    const isEmailVerified = userData.user.emailVerified;
+    const userName = userData.user.displayName;
+    if (isEmailVerified && userName === "Lovely Lashes") {
+      setIsUserVerified(true);
+    } else {
+      setIsUserVerified(false);
+    }
   }, [userData]);
 
   // Listen to auth state change
