@@ -150,7 +150,7 @@ const App = ({
       },
 
       (error) => {
-        appointmentsFailure(error);
+        appointmentsFailure(error.message);
       }
     );
     return unsub;
@@ -175,14 +175,14 @@ const App = ({
       },
 
       (error) => {
-        customersFailure(error);
+        customersFailure(error.message);
       }
     );
     return unsub;
   }, [customersFailure, customersRequestStarted, listenToCustomersSuccess]);
 
   return (
-    <ThemeProvider theme={true ? darkTheme : lightTheme}>
+    <ThemeProvider theme={false ? darkTheme : lightTheme}>
       <CssBaseline />
       <Container maxWidth="lg">
         <Grid container spacing={6} sx={{ mb: 10 }}>
