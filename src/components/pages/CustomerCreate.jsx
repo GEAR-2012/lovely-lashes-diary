@@ -4,9 +4,6 @@ import { connect } from "react-redux";
 import CustomerForm from "../forms/CustomerForm";
 
 const CustomerCreate = ({ customerData, createCustomer, alertOpen }) => {
-  // Create a date/time 'today'
-  const unixTimestamp = Date.now();
-
   const createNewCustomer = (inputData) => {
     let result = false;
     // Check for same data fields between new customer & existing customers

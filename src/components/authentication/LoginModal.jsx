@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { AppBar, Box, Fade, Grow, Modal, Paper, Slide, Tab, Tabs, useTheme } from "@mui/material";
+import { AppBar, Box, Fade, Modal, Paper, Tab, Tabs } from "@mui/material";
 import { closeLoginModal } from "../../redux";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
@@ -31,15 +31,10 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginModal = ({ loginModalData, closeLoginModal }) => {
   const classes = useStyles();
-  const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (e, value) => {
     setTabValue(value);
-  };
-
-  const handleChangeTabIndex = (index) => {
-    setTabValue(index);
   };
 
   return (

@@ -3,11 +3,7 @@ import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
 import { connect } from "react-redux";
 import { alertClose } from "../../redux";
-import Slide from "@mui/material/Slide";
 
-const SlideTransition = (props) => {
-  return <Slide {...props} direction="up" />;
-};
 const Alert = ({ alertData, alertClose }) => {
   return (
     <Snackbar

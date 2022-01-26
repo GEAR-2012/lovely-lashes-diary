@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ComboBox from "../formComponents/ComboBox";
 import MultipleSelect from "../formComponents/MultipleSelect";
 import SingleSelect from "../formComponents/SingleSelect";
@@ -79,21 +79,24 @@ const AppointmentForm = ({
     "Little Sensitive Same Time",
   ];
 
-  const initInputData = {
-    customerId: "",
-    elapsedTime: 0,
-    timeOfAppointment: unixTimestamp,
-    typeOfAppointment: "",
-    typeOfLashes: "",
-    curl: "",
-    thickness: "",
-    lashLength: [],
-    shape: "",
-    eyepad: "",
-    payment: 0,
-    tips: 0,
-    memo: "",
-  };
+  const initInputData = useMemo(
+    () => ({
+      customerId: "",
+      elapsedTime: 0,
+      timeOfAppointment: unixTimestamp,
+      typeOfAppointment: "",
+      typeOfLashes: "",
+      curl: "",
+      thickness: "",
+      lashLength: [],
+      shape: "",
+      eyepad: "",
+      payment: 0,
+      tips: 0,
+      memo: "",
+    }),
+    [unixTimestamp]
+  );
 
   const initInputErrData = {
     customerId: "",
@@ -120,7 +123,7 @@ const AppointmentForm = ({
   // set appointment id into local state, if given (only in update mode!!!)
   useEffect(() => {
     if (appointmentId) setIdOfAppointmentToUpdate(appointmentId);
-  }, []);
+  }, [appointmentId]);
 
   // get all data of an appointment (based on appointmentId) & set it into a local state (only in update mode!!!)
   useEffect(() => {
@@ -153,7 +156,7 @@ const AppointmentForm = ({
       // set to initial state
       setInputData(initInputData);
     }
-  }, [idOfAppointmentToUpdate]);
+  }, [idOfAppointmentToUpdate, appointmentData.appointments, initInputData]);
 
   // get all data of last appointment & set it into a local state
   useEffect(() => {
@@ -180,11 +183,25 @@ const AppointmentForm = ({
         setInputData(initInputData);
       }
     }
-  }, [inputData.customerId]);
+  }, [inputData.customerId, appointmentData.appointments, appointmentId, initInputData]);
 
   // pre-fill the form with previous appointmed data if customer Id is given
   // & if there is previous appointment
   useEffect(() => {
+    // Calculates the elapsed time & returns in days
+    const getElapsedTime = (prevAppointment) => {
+      let elapsedTime = 0;
+
+      const lastAppTime = prevAppointment.timeOfAppointment;
+
+      if (!isNaN(lastAppTime)) {
+        elapsedTime = inputData.timeOfAppointment - lastAppTime;
+        elapsedTime = Math.round(elapsedTime / 1000 / 60 / 60 / 24);
+      }
+
+      return elapsedTime;
+    };
+
     if (!appointmentId) {
       let elapsedTime;
       if (previousAppointment) {
@@ -223,7 +240,7 @@ const AppointmentForm = ({
         }));
       }
     }
-  }, [previousAppointment, inputData.timeOfAppointment, inputData.customerId]);
+  }, [previousAppointment, inputData.timeOfAppointment, inputData.customerId, appointmentId]);
 
   // check for form validity
   useEffect(() => {
@@ -258,20 +275,6 @@ const AppointmentForm = ({
       setIsFormValid(false);
     }
   }, [inputData, inputErrData]);
-
-  // Calculates the elapsed time & returns in days
-  const getElapsedTime = (prevAppointment) => {
-    let elapsedTime = 0;
-
-    const lastAppTime = prevAppointment.timeOfAppointment;
-
-    if (!isNaN(lastAppTime)) {
-      elapsedTime = inputData.timeOfAppointment - lastAppTime;
-      elapsedTime = Math.round(elapsedTime / 1000 / 60 / 60 / 24);
-    }
-
-    return elapsedTime;
-  };
 
   // get the selected values from multiple select input
   const getOptions = (options) => {

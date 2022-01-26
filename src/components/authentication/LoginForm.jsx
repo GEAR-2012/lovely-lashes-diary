@@ -39,7 +39,7 @@ const LoginForm = ({ userData, alertOpen, loginUser, closeLoginModal, deviceData
     if (userData.user && !userData.error) {
       closeLoginModal();
     }
-  }, [userData]);
+  }, [userData, alertOpen, closeLoginModal]);
 
   const initialInputData = {
     email: "",
@@ -62,7 +62,7 @@ const LoginForm = ({ userData, alertOpen, loginUser, closeLoginModal, deviceData
     } else {
       setIsFormValid(true);
     }
-  }, [inputErrData]);
+  }, [inputErrData, inputData.email, inputData.pwd]);
 
   const handleSubmit = () => {
     if (isFormValid) {

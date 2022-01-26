@@ -1,6 +1,6 @@
 import { CUSTOMERS_REQUEST_STARTED, CUSTOMERS_FAILURE, LISTEN_CUSTOMERS_SUCCESS } from "./customerTypes";
 import { db } from "../../firebase/config";
-import { addDoc, collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 const unixTimestamp = Date.now();
 

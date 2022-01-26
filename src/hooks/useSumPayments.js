@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { formattedTimestamp } from "../functions";
 
 const useSumPayments = (appointments) => {
   const [result, setResult] = useState(0);

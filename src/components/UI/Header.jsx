@@ -93,7 +93,7 @@ const Header = ({ userData, openLoginModal, logoutUser, alertOpen }) => {
         message: userData.error,
       });
     }
-  }, [userData]);
+  }, [userData, alertOpen]);
 
   const handleLogout = () => {
     logoutUser();

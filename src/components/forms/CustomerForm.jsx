@@ -52,7 +52,7 @@ const CustomerForm = ({ formTitle, inputs, action, redirect, alertOpen, deviceDa
     if (inputs) {
       setInputData(inputs);
     }
-  }, []);
+  }, [inputs]);
 
   // set form validity
   useEffect(() => {

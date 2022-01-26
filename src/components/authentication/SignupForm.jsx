@@ -45,7 +45,7 @@ const SignupForm = ({ userData, createUser, alertOpen, closeLoginModal, deviceDa
 
       closeLoginModal();
     }
-  }, [userData]);
+  }, [userData, alertOpen, closeLoginModal]);
 
   const initialInputData = {
     uName: "",
@@ -93,7 +93,7 @@ const SignupForm = ({ userData, createUser, alertOpen, closeLoginModal, deviceDa
     } else {
       setIsFormValid(true);
     }
-  }, [inputErrData]);
+  }, [inputErrData, inputData.email, inputData.pwd1, inputData.pwd2, inputData.uName]);
 
   const handleSubmit = () => {
     if (isFormValid) {

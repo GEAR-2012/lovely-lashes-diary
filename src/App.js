@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase/config";
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Container, CssBaseline, Grid } from "@mui/material";
 import Alert from "./components/UI/Alert";
@@ -31,7 +31,6 @@ import {
 import AppointmentUpdate from "./components/pages/AppointmentUpdate";
 import CustomerDetails from "./components/pages/CustomerDetails";
 import AppointmentDetails from "./components/pages/AppointmentDetails";
-import { amber, blue, blueGrey, deepPurple, grey, lightBlue, orange } from "@mui/material/colors";
 import Statistics from "./components/pages/Statistics";
 
 const lightTheme = createTheme({
@@ -101,7 +100,7 @@ const App = ({
 
   useEffect(() => {
     deviceSet(getDeviceScreenDimensions());
-  }, []);
+  }, [deviceSet]);
 
   window.addEventListener("resize", () => {
     deviceSet(getDeviceScreenDimensions());
@@ -130,7 +129,7 @@ const App = ({
       }
     });
     return unsub;
-  }, []);
+  }, [alertOpen, userUnset, userSet]);
 
   // Listen to appointment list change
   useEffect(() => {
@@ -155,7 +154,7 @@ const App = ({
       }
     );
     return unsub;
-  }, []);
+  }, [appointmentsFailure, appointmentsRequestStarted, listenToAppointmentsSuccess]);
 
   // Listen to customer list change
   useEffect(() => {
@@ -180,7 +179,7 @@ const App = ({
       }
     );
     return unsub;
-  }, []);
+  }, [customersFailure, customersRequestStarted, listenToCustomersSuccess]);
 
   return (
     <ThemeProvider theme={true ? darkTheme : lightTheme}>

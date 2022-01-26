@@ -20,7 +20,7 @@ export default function ComboBox({ disabled, error, handleBlur, customerId, opti
         setValue(valueByCusId);
       }
     }
-  }, [customerId]);
+  }, [customerId, options]);
 
   return (
     <FormControl error={!!error}>

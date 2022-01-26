@@ -33,7 +33,7 @@ const NotFoundPage = () => {
 
   return (
     <Grid className={classes.grid} item xs={12}>
-      <img className={classes.notFoundImage} src="images/404-error-page.jpeg" />
+      <img className={classes.notFoundImage} src="images/404-error-page.jpeg" alt="404 not found" />
     </Grid>
   );
 };
