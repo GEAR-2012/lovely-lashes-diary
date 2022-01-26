@@ -188,7 +188,7 @@ const App = ({
   }, [customersFailure, customersRequestStarted, listenToCustomersSuccess]);
 
   return (
-    <ThemeProvider theme={false ? darkTheme : lightTheme}>
+    <ThemeProvider theme={true ? darkTheme : lightTheme}>
       <CssBaseline />
       <Container maxWidth="lg">
         <Grid container spacing={6} sx={{ mb: 10 }}>
