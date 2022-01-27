@@ -117,53 +117,57 @@ const App = ({
 
   // Listen to appointment list change
   useEffect(() => {
-    appointmentsRequestStarted();
-    const collectionRef = collection(db, "appointments");
-    const q = query(collectionRef, orderBy("timeOfAppointment", "asc"));
-    const unsub = onSnapshot(
-      q,
-      (snapshot) => {
-        const appointments = [];
-        snapshot.forEach((doc) => {
-          appointments.push({
-            appointmentId: doc.id,
-            ...doc.data(),
+    if (isUserVerified) {
+      appointmentsRequestStarted();
+      const collectionRef = collection(db, "appointments");
+      const q = query(collectionRef, orderBy("timeOfAppointment", "asc"));
+      const unsub = onSnapshot(
+        q,
+        (snapshot) => {
+          const appointments = [];
+          snapshot.forEach((doc) => {
+            appointments.push({
+              appointmentId: doc.id,
+              ...doc.data(),
+            });
           });
-        });
-        listenToAppointmentsSuccess(appointments);
-      },
+          listenToAppointmentsSuccess(appointments);
+        },
 
-      (error) => {
-        appointmentsFailure(error.message);
-      }
-    );
-    return unsub;
-  }, [appointmentsFailure, appointmentsRequestStarted, listenToAppointmentsSuccess]);
+        (error) => {
+          appointmentsFailure(error.message);
+        }
+      );
+      return unsub;
+    }
+  }, [isUserVerified, appointmentsFailure, appointmentsRequestStarted, listenToAppointmentsSuccess]);
 
   // Listen to customer list change
   useEffect(() => {
-    customersRequestStarted();
-    const collectionRef = collection(db, "customers");
-    const q = query(collectionRef, orderBy("name", "asc"));
-    const unsub = onSnapshot(
-      q,
-      (snapshot) => {
-        const customers = [];
-        snapshot.forEach((doc) => {
-          customers.push({
-            ...doc.data(),
-            customerId: doc.id,
+    if (isUserVerified) {
+      customersRequestStarted();
+      const collectionRef = collection(db, "customers");
+      const q = query(collectionRef, orderBy("name", "asc"));
+      const unsub = onSnapshot(
+        q,
+        (snapshot) => {
+          const customers = [];
+          snapshot.forEach((doc) => {
+            customers.push({
+              ...doc.data(),
+              customerId: doc.id,
+            });
           });
-        });
-        listenToCustomersSuccess(customers);
-      },
+          listenToCustomersSuccess(customers);
+        },
 
-      (error) => {
-        customersFailure(error.message);
-      }
-    );
-    return unsub;
-  }, [customersFailure, customersRequestStarted, listenToCustomersSuccess]);
+        (error) => {
+          customersFailure(error.message);
+        }
+      );
+      return unsub;
+    }
+  }, [isUserVerified, customersFailure, customersRequestStarted, listenToCustomersSuccess]);
 
   // get the size of the device screen
   const getDeviceScreenDimensions = () => {

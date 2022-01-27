@@ -8,18 +8,20 @@ const useFirstLastTime = (appointments) => {
   });
 
   useEffect(() => {
-    appointments.sort((a, b) => {
-      return a.timeOfAppointment - b.timeOfAppointment;
-    });
+    if (appointments) {
+      appointments.sort((a, b) => {
+        return a.timeOfAppointment - b.timeOfAppointment;
+      });
 
-    const timeOfFirstAppointment = formattedTimestamp(appointments.shift()?.timeOfAppointment);
+      const timeOfFirstAppointment = formattedTimestamp(appointments.shift()?.timeOfAppointment);
 
-    const timeOfLastAppointment = formattedTimestamp(appointments.pop()?.timeOfAppointment);
+      const timeOfLastAppointment = formattedTimestamp(appointments.pop()?.timeOfAppointment);
 
-    setResult({
-      timeOfFirstAppointment,
-      timeOfLastAppointment,
-    });
+      setResult({
+        timeOfFirstAppointment,
+        timeOfLastAppointment,
+      });
+    }
   }, [appointments]);
 
   return result;
