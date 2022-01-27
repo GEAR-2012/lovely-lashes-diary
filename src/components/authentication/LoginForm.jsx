@@ -119,7 +119,7 @@ const LoginForm = ({ userData, alertOpen, loginUser, closeLoginModal, deviceData
         label="Email"
         value={inputData.email}
         onChange={handleChange}
-        onBlur={handleBlur}
+        // onBlur={handleBlur}
         fullWidth
         helperText={inputErrData.email}
       />

@@ -195,7 +195,7 @@ const App = ({
   }, [userData]);
 
   return (
-    <ThemeProvider theme={true ? darkTheme : lightTheme}>
+    <ThemeProvider theme={false ? darkTheme : lightTheme}>
       <CssBaseline />
       <Container maxWidth="lg">
         <Grid container spacing={6} sx={{ mb: 10 }}>
