@@ -17,6 +17,7 @@ import AppointmentList from "./components/pages/AppointmentList";
 import LoginModal from "./components/authentication/LoginModal";
 import NotFoundPage from "./components/pages/NotFoundPage";
 import {
+  userRequestStarted,
   userSet,
   userUnset,
   customersRequestStarted,
@@ -81,6 +82,7 @@ const App = ({
   userData,
   userSet,
   userUnset,
+  userRequestStarted,
   customersRequestStarted,
   listenToCustomersSuccess,
   customersFailure,
@@ -92,33 +94,9 @@ const App = ({
 }) => {
   const [isUserVerified, setIsUserVerified] = useState(false);
 
-  // get the size of the device screen
-  const getDeviceScreenDimensions = () => {
-    const deviceScreenWidth = window.innerWidth;
-    return deviceScreenWidth <= 600;
-  };
-
-  useEffect(() => {
-    deviceSet(getDeviceScreenDimensions());
-  }, [deviceSet]);
-
-  window.addEventListener("resize", () => {
-    deviceSet(getDeviceScreenDimensions());
-  });
-
-  // get if the current user is verified or not
-  useEffect(() => {
-    const isEmailVerified = userData.user.emailVerified;
-    const userName = userData.user.displayName;
-    if (isEmailVerified && userName === "Lovely Lashes") {
-      setIsUserVerified(true);
-    } else {
-      setIsUserVerified(false);
-    }
-  }, [userData]);
-
   // Listen to auth state change
   useEffect(() => {
+    userRequestStarted();
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
         userSet(user);
@@ -135,7 +113,7 @@ const App = ({
       }
     });
     return unsub;
-  }, [alertOpen, userUnset, userSet]);
+  }, [alertOpen, userUnset, userSet, userRequestStarted]);
 
   // Listen to appointment list change
   useEffect(() => {
@@ -186,6 +164,31 @@ const App = ({
     );
     return unsub;
   }, [customersFailure, customersRequestStarted, listenToCustomersSuccess]);
+
+  // get the size of the device screen
+  const getDeviceScreenDimensions = () => {
+    const deviceScreenWidth = window.innerWidth;
+    return deviceScreenWidth <= 600;
+  };
+
+  useEffect(() => {
+    deviceSet(getDeviceScreenDimensions());
+  }, [deviceSet]);
+
+  window.addEventListener("resize", () => {
+    deviceSet(getDeviceScreenDimensions());
+  });
+
+  // get if the current user is verified or not
+  useEffect(() => {
+    const isEmailVerified = userData.user.emailVerified;
+    const userName = userData.user.displayName;
+    if (isEmailVerified && userName === "Lovely Lashes") {
+      setIsUserVerified(true);
+    } else {
+      setIsUserVerified(false);
+    }
+  }, [userData]);
 
   return (
     <ThemeProvider theme={true ? darkTheme : lightTheme}>
@@ -240,6 +243,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     // auth
+    userRequestStarted: () => dispatch(userRequestStarted()),
     userSet: (inp) => dispatch(userSet(inp)),
     userUnset: () => dispatch(userUnset()),
     // firestore (customers)

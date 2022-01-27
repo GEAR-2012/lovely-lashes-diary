@@ -49,7 +49,7 @@ const AppointmentForm = ({
   deviceData,
 }) => {
   const classes = useStyles();
-  const unixTimestamp = Date.now();
+  const unixTimestamp = useMemo(() => Date.now(), []);
   const navigate = useNavigate();
   const isMobile = deviceData.isMobile;
 
@@ -79,8 +79,8 @@ const AppointmentForm = ({
     "Little Sensitive Same Time",
   ];
 
-  const initInputData = useMemo(
-    () => ({
+  const initInputData = useMemo(() => {
+    return {
       customerId: "",
       elapsedTime: 0,
       timeOfAppointment: unixTimestamp,
@@ -94,9 +94,8 @@ const AppointmentForm = ({
       payment: 0,
       tips: 0,
       memo: "",
-    }),
-    [unixTimestamp]
-  );
+    };
+  }, [unixTimestamp]);
 
   const initInputErrData = {
     customerId: "",
@@ -183,7 +182,7 @@ const AppointmentForm = ({
         setInputData(initInputData);
       }
     }
-  }, [inputData.customerId, appointmentData.appointments, appointmentId, initInputData]);
+  }, [inputData.customerId, appointmentData, appointmentId, initInputData]);
 
   // pre-fill the form with previous appointmed data if customer Id is given
   // & if there is previous appointment
@@ -240,7 +239,7 @@ const AppointmentForm = ({
         }));
       }
     }
-  }, [previousAppointment, inputData.timeOfAppointment, inputData.customerId, appointmentId]);
+  }, [previousAppointment, appointmentId, inputData.customerId, inputData.timeOfAppointment]);
 
   // check for form validity
   useEffect(() => {
@@ -451,165 +450,172 @@ const AppointmentForm = ({
     }
   };
 
+  let contentForm = "";
+  if (inputData) {
+    contentForm = (
+      <form autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
+        {/* Select Customer */}
+        <ComboBox
+          disabled={!!appointmentId}
+          error={inputErrData.customerId}
+          handleBlur={handleInputBlur}
+          customerId={inputData.customerId}
+          options={options}
+          getInput={getInput}
+          required={true}
+        />
+        {/* Time of Appointment */}
+        <TextField
+          disabled={!!appointmentId}
+          error={!!inputErrData.timeOfAppointment}
+          helperText={inputErrData.timeOfAppointment}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          name="timeOfAppointment"
+          size="small"
+          id="datetime-local"
+          label="Time of Appoinment"
+          type="datetime-local"
+          value={timestampToDatetimePickerFormat(inputData.timeOfAppointment)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        {/* Elapsed Time */}
+        <TextField
+          disabled
+          fullWidth
+          variant="outlined"
+          size="small"
+          type="text"
+          label="Time elapsed since the last appointment (days)"
+          name="elapsedTime"
+          value={inputData.elapsedTime}
+        />
+        {/* Type of Appointment */}
+        <SingleSelect
+          error={inputErrData.typeOfAppointment}
+          label="Type of Appointment"
+          name="typeOfAppointment"
+          value={inputData.typeOfAppointment}
+          options={appointmentTypes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Type of Lashes */}
+        <SingleSelect
+          error={inputErrData.typeOfLashes}
+          label="Type of Lashes"
+          name="typeOfLashes"
+          value={inputData.typeOfLashes}
+          options={lashesTypes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Curl */}
+        <SingleSelect
+          error={inputErrData.curl}
+          label="Curl of Lashes"
+          name="curl"
+          value={inputData.curl}
+          options={curlTypes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Thickness */}
+        <SingleSelect
+          error={inputErrData.thickness}
+          label="Thickness of Lashes"
+          name="thickness"
+          value={inputData.thickness}
+          options={thicknesses}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Lash Length */}
+        <MultipleSelect
+          error={inputErrData.lashLength}
+          initValue={inputData.lashLength}
+          name="lashLength"
+          label="Lengths of Lashes"
+          options={lashLengths}
+          size="small"
+          getOptions={getOptions}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Shape */}
+        <SingleSelect
+          error={inputErrData.shape}
+          label="Shape of Lashes"
+          name="shape"
+          value={inputData.shape}
+          options={shapes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Pad */}
+        <SingleSelect
+          error={inputErrData.eyepad}
+          label="Eye Pad usage"
+          name="eyepad"
+          value={inputData.eyepad}
+          options={eyepadTypes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={true}
+        />
+        {/* Payment */}
+        <Currency
+          error={inputErrData.payment}
+          label="Payment"
+          name="payment"
+          value={inputData.payment}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          symbol="£"
+          required={true}
+        />
+        {/* Tips */}
+        <Currency
+          error={inputErrData.tips}
+          label="Tips"
+          name="tips"
+          value={inputData.tips}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          symbol="£"
+        />
+        {/* Memo */}
+        <CombiTextfield
+          size="small"
+          error={inputErrData.memo}
+          label="Memo of Appointment"
+          name="memo"
+          value={inputData.memo}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          multiline={true}
+        />
+        <Button type="submit" variant="contained" size={isMobile ? "small" : "large"}>
+          {formTitle}
+        </Button>
+      </form>
+    );
+  }
+
   return (
     <Grid item xs={12} md={8} lg={6} xl={5}>
       <Paper sx={{ padding: "1.6rem" }} elevation={4}>
         <Typography variant="h4" className={classes.formTitle}>
           {formTitle}
         </Typography>
-        <form autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
-          {/* Select Customer */}
-          <ComboBox
-            disabled={!!appointmentId}
-            error={inputErrData.customerId}
-            handleBlur={handleInputBlur}
-            customerId={inputData.customerId}
-            options={options}
-            getInput={getInput}
-            required={true}
-          />
-          {/* Time of Appointment */}
-          <TextField
-            disabled={!!appointmentId}
-            error={!!inputErrData.timeOfAppointment}
-            helperText={inputErrData.timeOfAppointment}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            name="timeOfAppointment"
-            size="small"
-            id="datetime-local"
-            label="Time of Appoinment"
-            type="datetime-local"
-            value={timestampToDatetimePickerFormat(inputData.timeOfAppointment)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          {/* Elapsed Time */}
-          <TextField
-            disabled
-            fullWidth
-            variant="outlined"
-            size="small"
-            type="text"
-            label="Time elapsed since the last appointment (days)"
-            name="elapsedTime"
-            value={inputData.elapsedTime}
-          />
-          {/* Type of Appointment */}
-          <SingleSelect
-            error={inputErrData.typeOfAppointment}
-            label="Type of Appointment"
-            name="typeOfAppointment"
-            value={inputData.typeOfAppointment}
-            options={appointmentTypes}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Type of Lashes */}
-          <SingleSelect
-            error={inputErrData.typeOfLashes}
-            label="Type of Lashes"
-            name="typeOfLashes"
-            value={inputData.typeOfLashes}
-            options={lashesTypes}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Curl */}
-          <SingleSelect
-            error={inputErrData.curl}
-            label="Curl of Lashes"
-            name="curl"
-            value={inputData.curl}
-            options={curlTypes}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Thickness */}
-          <SingleSelect
-            error={inputErrData.thickness}
-            label="Thickness of Lashes"
-            name="thickness"
-            value={inputData.thickness}
-            options={thicknesses}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Lash Length */}
-          <MultipleSelect
-            error={inputErrData.lashLength}
-            initValue={inputData.lashLength}
-            name="lashLength"
-            label="Lengths of Lashes"
-            options={lashLengths}
-            size="small"
-            getOptions={getOptions}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Shape */}
-          <SingleSelect
-            error={inputErrData.shape}
-            label="Shape of Lashes"
-            name="shape"
-            value={inputData.shape}
-            options={shapes}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Pad */}
-          <SingleSelect
-            error={inputErrData.eyepad}
-            label="Eye Pad usage"
-            name="eyepad"
-            value={inputData.eyepad}
-            options={eyepadTypes}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            required={true}
-          />
-          {/* Payment */}
-          <Currency
-            error={inputErrData.payment}
-            label="Payment"
-            name="payment"
-            value={inputData.payment}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            symbol="£"
-            required={true}
-          />
-          {/* Tips */}
-          <Currency
-            error={inputErrData.tips}
-            label="Tips"
-            name="tips"
-            value={inputData.tips}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            symbol="£"
-          />
-          {/* Memo */}
-          <CombiTextfield
-            size="small"
-            error={inputErrData.memo}
-            label="Memo of Appointment"
-            name="memo"
-            value={inputData.memo}
-            handleChange={handleInputChange}
-            handleBlur={handleInputBlur}
-            multiline={true}
-          />
-          <Button type="submit" variant="contained" size={isMobile ? "small" : "large"}>
-            {formTitle}
-          </Button>
-        </form>
+        {contentForm}
       </Paper>
     </Grid>
   );

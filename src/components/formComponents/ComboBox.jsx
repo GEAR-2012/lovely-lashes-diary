@@ -39,7 +39,7 @@ export default function ComboBox({ disabled, error, handleBlur, customerId, opti
         isOptionEqualToValue={(option, value) => option.id === value.id}
         getOptionLabel={(option) => `${option.name} ${option.phone} ${option.memo}`}
         renderOption={(props, option) => (
-          <Box component="li" {...props}>
+          <Box key={option.id} component="li" {...props}>
             {option.name} {option.phone} {option.memo}
           </Box>
         )}
