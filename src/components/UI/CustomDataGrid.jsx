@@ -1,5 +1,5 @@
 import React from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 const CustomDataGrid = ({ columns, rows, action }) => {
   const handleRowClick = (params) => {
@@ -16,6 +16,9 @@ const CustomDataGrid = ({ columns, rows, action }) => {
         rows={rows}
         pageSize={25}
         disableSelectionOnClick
+        components={{
+          Toolbar: GridToolbar,
+        }}
       />
     </div>
   );

@@ -4,8 +4,7 @@ import { connect } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase/config";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Container, CssBaseline, Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import Alert from "./components/UI/Alert";
 import LandingPage from "./components/pages/LandingPage";
 import Header from "./components/UI/Header";
@@ -33,50 +32,6 @@ import AppointmentUpdate from "./components/pages/AppointmentUpdate";
 import CustomerDetails from "./components/pages/CustomerDetails";
 import AppointmentDetails from "./components/pages/AppointmentDetails";
 import Statistics from "./components/pages/Statistics";
-
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    darken: "rgba(0, 0, 0, 0.04)",
-    primary: { main: "hsl(282, 50%, 55%)" },
-    secondary: { main: "hsl(50, 100%, 50%)" },
-    error: {
-      main: "hsl(10, 100%, 50%)",
-    },
-    text: {
-      primary: "hsl(282, 50%, 25%)",
-    },
-    background: {
-      paper: "hsl(0, 0%, 100%)",
-      default: "hsl(0, 0%, 97%)",
-    },
-  },
-  shape: {
-    borderRadius: 6,
-  },
-});
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    darken: "rgba(0, 0, 0, 0.15)",
-    primary: { main: "hsl(201, 49%, 40%)" },
-    secondary: { main: "hsl(48, 100%, 50%)" },
-    error: {
-      main: "hsl(10, 100%, 50%)",
-    },
-    text: {
-      primary: "hsl(50, 100%, 50%)",
-    },
-    background: {
-      paper: "hsl(0, 0%, 5%)",
-      default: "hsl(0, 0%, 10%)",
-    },
-  },
-  shape: {
-    borderRadius: 6,
-  },
-});
 
 const App = ({
   userData,
@@ -195,46 +150,43 @@ const App = ({
   }, [userData]);
 
   return (
-    <ThemeProvider theme={false ? darkTheme : lightTheme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <Grid container spacing={6} sx={{ mb: 10 }}>
-          <BrowserRouter>
-            <Header />
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              {/* Private Routes */}
-              <Route
-                path="/customer_details/:customerId"
-                element={isUserVerified ? <CustomerDetails /> : <LandingPage />}
-              />
-              <Route path="/customer_create" element={isUserVerified ? <CustomerCreate /> : <LandingPage />} />
-              <Route
-                path="/customer_update/:customerId"
-                element={isUserVerified ? <CustomerUpdate /> : <LandingPage />}
-              />
-              <Route
-                path="/appointment_details/:appointmentId"
-                element={isUserVerified ? <AppointmentDetails /> : <LandingPage />}
-              />
-              <Route path="/appointment_create" element={isUserVerified ? <AppointmentCreate /> : <LandingPage />} />
-              <Route
-                path="/appointment_update/:appointmentId"
-                element={isUserVerified ? <AppointmentUpdate /> : <LandingPage />}
-              />
-              <Route path="/appointment_list" element={isUserVerified ? <AppointmentList /> : <LandingPage />} />
-              <Route path="/customer_list" element={isUserVerified ? <CustomerList /> : <LandingPage />} />
-              <Route path="/statistics" element={isUserVerified ? <Statistics /> : <LandingPage />} />
-              {/* Not Found */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </BrowserRouter>
-          <LoginModal />
-          <Alert />
-        </Grid>
-      </Container>
-    </ThemeProvider>
+    <Container maxWidth="lg">
+      <Grid container spacing={6} sx={{ mb: 10 }}>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            {/* Private Routes */}
+            <Route
+              path="/customer_details/:customerId"
+              element={isUserVerified ? <CustomerDetails /> : <LandingPage />}
+            />
+            <Route path="/customer_create" element={isUserVerified ? <CustomerCreate /> : <LandingPage />} />
+            <Route
+              path="/customer_update/:customerId"
+              element={isUserVerified ? <CustomerUpdate /> : <LandingPage />}
+            />
+            <Route
+              path="/appointment_details/:appointmentId"
+              element={isUserVerified ? <AppointmentDetails /> : <LandingPage />}
+            />
+            <Route path="/appointment_create" element={isUserVerified ? <AppointmentCreate /> : <LandingPage />} />
+            <Route
+              path="/appointment_update/:appointmentId"
+              element={isUserVerified ? <AppointmentUpdate /> : <LandingPage />}
+            />
+            <Route path="/appointment_list" element={isUserVerified ? <AppointmentList /> : <LandingPage />} />
+            <Route path="/customer_list" element={isUserVerified ? <CustomerList /> : <LandingPage />} />
+            <Route path="/statistics" element={isUserVerified ? <Statistics /> : <LandingPage />} />
+            {/* Not Found */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+        <LoginModal />
+        <Alert />
+      </Grid>
+    </Container>
   );
 };
 
