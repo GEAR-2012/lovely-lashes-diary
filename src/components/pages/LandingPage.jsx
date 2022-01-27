@@ -12,6 +12,7 @@ const LandingPage = ({ userData, deviceData }) => {
 
   // get if the current user is verified or not
   useEffect(() => {
+    setIsUserVerified(null);
     if (userData.user) {
       const isEmailVerified = userData.user.emailVerified;
       const userName = userData.user.displayName;
@@ -110,7 +111,7 @@ const LandingPage = ({ userData, deviceData }) => {
     contentNotVerified = (
       <Grid item xs={12}>
         <Typography variant="h4" color="error">
-          KSorry You are not verified to see this contet.
+          Sorry You have no permission to see this content.
         </Typography>
       </Grid>
     );
