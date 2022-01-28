@@ -645,7 +645,7 @@ const AppointmentForm = ({
   }
 
   return (
-    <Grid item xs={12} md={8} lg={6} xl={5}>
+    <Grid item xs={12} md={8} lg={6}>
       <Paper sx={{ padding: "1.6rem" }} elevation={4}>
         <Typography variant="h4" className={classes.formTitle}>
           {formTitle}

@@ -200,7 +200,7 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData, openDel
         </Grid>
       )}
       {appointmentDetails && (
-        <Grid item xs={12} md={10} lg={8} xl={6}>
+        <Grid item xs={12} md={10} lg={8}>
           <Card className={classes.card} elevation={4}>
             <CardContent>
               <Typography className={classes.title} variant="h4">
