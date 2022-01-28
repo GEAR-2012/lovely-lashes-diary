@@ -28,8 +28,6 @@ const useStyles = makeStyles((theme) => ({
 const Statistics = ({ customerData, appointmentData }) => {
   const classes = useStyles();
 
-  console.log(customerData, appointmentData);
-
   let loading = null;
 
   if (customerData.loading || appointmentData.loading) {

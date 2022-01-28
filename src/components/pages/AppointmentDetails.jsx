@@ -112,15 +112,13 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData, openDel
   const classes = useStyles();
   const isMobile = deviceData.isMobile;
 
-  console.log(customerData, appointmentData);
-
   // local state to hold appointment's details
   const [appointmentDetails, setAppointmentDetails] = useState();
 
   // get appointment's details from 'appointmentData' redux store by appointment id
   useEffect(() => {
     if (!customerData.loading && !appointmentData.loading) {
-      if (customerData.customers.length > 0 && appointmentData.appointments.length > 0) {
+      if (appointmentData.appointments.length > 0) {
         const getAppointmentDetails = (appArr, custArr) => {
           const appointment = appArr.filter((app) => {
             return app.appointmentId === appointmentId;
