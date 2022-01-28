@@ -89,8 +89,9 @@ const AppointmentList = ({ customerData, appointmentData }) => {
   // determine the columns of the dataGrid
   const appointmentListColumns = [
     { field: "name", headerName: "Name", width: 100 },
-    { field: "elapsedTime", headerName: "Elapsed Time (days)", width: 170, type: "number" },
-    { field: "timeOfAppointment", headerName: "Time of Appointment", width: 200 },
+    { field: "elapsedSincePrev", headerName: "Elapsed days since prev", width: 200, type: "number" },
+    { field: "timeOfAppointment", headerName: "Time of Appointment", width: 180 },
+    { field: "elapsedTillNow", headerName: "Elapsed till now", width: 130, type: "number" },
     { field: "typeOfAppointment", headerName: "Type of Appointment", width: 160 },
     { field: "typeOfLashes", headerName: "Type of Lashes", width: 160 },
     { field: "combination_1", headerName: "Combination 1", width: 160 },
@@ -127,11 +128,24 @@ const AppointmentList = ({ customerData, appointmentData }) => {
           comb_2 = `${appointment.curl_2} ${appointment.thickness_2}`;
         }
 
+        // Calculates the elapsed time till now from a unix timestamp & returns it in days
+        const getElapsedTime = (unixTimestamp) => {
+          let elapsedTime = 0;
+          if (!isNaN(unixTimestamp)) {
+            elapsedTime = Date.now() - unixTimestamp;
+            elapsedTime = Math.round(elapsedTime / 1000 / 60 / 60 / 24);
+          }
+          return elapsedTime;
+        };
+
+        const elapsedDaysTillNow = getElapsedTime(appointment.timeOfAppointment);
+
         const row = {
           id: appointment.appointmentId,
           name: customerName,
-          elapsedTime: appointment.elapsedTime,
+          elapsedSincePrev: appointment.elapsedTime,
           timeOfAppointment: formattedTimestamp(appointment.timeOfAppointment),
+          elapsedTillNow: elapsedDaysTillNow,
           typeOfAppointment: appointment.typeOfAppointment,
           typeOfLashes: appointment.typeOfLashes,
           combination_1: comb_1,

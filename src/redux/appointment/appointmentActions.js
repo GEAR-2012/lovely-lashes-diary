@@ -4,7 +4,7 @@ import {
   LISTEN_APPOINTMENTS_SUCCESS,
   APPOINTMENTS_UNLOAD,
 } from "./appointmentTypes";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 const unixTimestamp = Date.now();
@@ -66,6 +66,24 @@ export const updateAppointment = (docId, appointmentData) => {
 
     try {
       updateDocument().catch((error) => dispatch(appointmentsFailure(error)));
+    } catch (error) {
+      dispatch(appointmentsFailure(error));
+    }
+  };
+};
+
+// DELETE
+export const deleteAppointment = (docId) => {
+  return (dispatch) => {
+    dispatch(appointmentsRequestStarted());
+    const deleteDocument = async () => {
+      const documentRef = doc(db, "appointments", docId);
+      const docRef = await deleteDoc(documentRef);
+      return docRef;
+    };
+
+    try {
+      deleteDocument().catch((error) => dispatch(appointmentsFailure(error)));
     } catch (error) {
       dispatch(appointmentsFailure(error));
     }

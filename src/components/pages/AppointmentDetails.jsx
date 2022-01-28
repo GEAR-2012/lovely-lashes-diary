@@ -5,6 +5,7 @@ import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from "@
 import { makeStyles } from "@mui/styles";
 import ProgressCircular from "../UI/ProgressCircular";
 import { formattedTimestamp, displayCurrency } from "../../functions";
+import { openDeleteAppModal } from "../../redux";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   entryTitle: {
-    width: 200,
+    width: 300,
     lineHeight: 1,
     color: theme.palette.text.secondary,
     textAlign: "right",
@@ -96,13 +97,22 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "right",
     },
   },
+  cardActions: {
+    flexDirection: "row",
+    gap: theme.spacing(2),
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+    },
+  },
 }));
 
-const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
+const AppointmentDetails = ({ appointmentData, customerData, deviceData, openDeleteAppModal }) => {
   const { appointmentId } = useParams();
   const navigate = useNavigate();
   const classes = useStyles();
   const isMobile = deviceData.isMobile;
+
+  console.log(customerData, appointmentData);
 
   // local state to hold appointment's details
   const [appointmentDetails, setAppointmentDetails] = useState();
@@ -110,55 +120,85 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
   // get appointment's details from 'appointmentData' redux store by appointment id
   useEffect(() => {
     if (!customerData.loading && !appointmentData.loading) {
-      const appointment = appointmentData.appointments.filter((appointment) => {
-        return appointment.appointmentId === appointmentId;
-      })[0];
+      if (customerData.customers.length > 0 && appointmentData.appointments.length > 0) {
+        const getAppointmentDetails = (appArr, custArr) => {
+          const appointment = appArr.filter((app) => {
+            return app.appointmentId === appointmentId;
+          })[0];
 
-      let customerObj = customerData.customers.filter((cust) => {
-        return cust.customerId === appointment.customerId;
-      })[0];
+          if (!appointment) return false;
 
-      if (!customerObj) {
-        customerObj = {
-          name: "Unknown",
-          phone: "",
-          memo: "",
+          let customerObj = custArr.filter((cust) => {
+            return cust.customerId === appointment.customerId;
+          })[0];
+
+          if (!customerObj) {
+            customerObj = {
+              name: "Unknown",
+              phone: "",
+              memo: "",
+            };
+          }
+
+          const comb_1 = `${appointment.curl_1} ${appointment.thickness_1}`;
+
+          let comb_2 = "";
+          if (appointment.curl_2 || appointment.thickness_2) {
+            comb_2 = `${appointment.curl_2} ${appointment.thickness_2}`;
+          }
+
+          // Calculates the elapsed time till now from a unix timestamp & returns it in days
+          const getElapsedTime = (unixTimestamp) => {
+            let elapsedTime = 0;
+            if (!isNaN(unixTimestamp)) {
+              elapsedTime = Date.now() - unixTimestamp;
+              elapsedTime = Math.round(elapsedTime / 1000 / 60 / 60 / 24);
+            }
+            return elapsedTime;
+          };
+
+          const elapsedDaysTillNow = getElapsedTime(appointment.timeOfAppointment);
+
+          const detailsArray = [
+            ["Customer Name", customerObj.name],
+            ["Customer Phone", customerObj.phone],
+            ["Customer Memo", customerObj.memo],
+            ["Elapsed days since previous", appointment.elapsedTime],
+            ["Time of Appointment", formattedTimestamp(appointment.timeOfAppointment)],
+            ["Elapsed days till now", elapsedDaysTillNow],
+            ["Type of Appointment", appointment.typeOfAppointment],
+            ["Type of Lashes", appointment.typeOfLashes],
+            ["Combination 1", comb_1],
+            ["Combination 2", comb_2],
+            ["Length of Lashes", appointment.lashLength.join()],
+            ["Shape of Lashes", appointment.shape],
+            ["Eyepad usage", appointment.eyepad],
+            ["Payment", displayCurrency(appointment.payment, "£")],
+            ["Tips", displayCurrency(appointment.tips, "£")],
+            ["Appointment Memo", appointment.memo],
+          ];
+          return detailsArray;
         };
+
+        const detailsArray = getAppointmentDetails(appointmentData.appointments, customerData.customers);
+
+        if (detailsArray) setAppointmentDetails(detailsArray);
       }
-
-      const comb_1 = `${appointment.curl_1} ${appointment.thickness_1}`;
-
-      let comb_2 = "";
-      if (appointment.curl_2 || appointment.thickness_2) {
-        comb_2 = `${appointment.curl_2} ${appointment.thickness_2}`;
-      }
-
-      const detailsArray = [
-        ["Customer Name", customerObj.name],
-        ["Customer Phone", customerObj.phone],
-        ["Customer Memo", customerObj.memo],
-        ["Elapsed Time", appointment.elapsedTime],
-        ["Time of Appointment", formattedTimestamp(appointment.timeOfAppointment)],
-        ["Type of Appointment", appointment.typeOfAppointment],
-        ["Type of Lashes", appointment.typeOfLashes],
-        ["Combination 1", comb_1],
-        ["Combination 2", comb_2],
-        ["Length of Lashes", appointment.lashLength.join()],
-        ["Shape of Lashes", appointment.shape],
-        ["Eyepad usage", appointment.eyepad],
-        ["Payment", displayCurrency(appointment.payment, "£")],
-        ["Tips", displayCurrency(appointment.tips, "£")],
-        ["Appointment Memo", appointment.memo],
-      ];
-      setAppointmentDetails(detailsArray);
     }
   }, [appointmentId, appointmentData, customerData]);
 
   return (
-    <>
-      {!appointmentDetails && (
+    <React.Fragment>
+      {(customerData.loading || appointmentData.loading) && (
         <Grid item xs={12}>
           <ProgressCircular />
+        </Grid>
+      )}
+      {!customerData.loading && !appointmentData.loading && !appointmentDetails && (
+        <Grid item xs={12}>
+          <Typography variant="h6" color="error">
+            No Appointment found with the provided ID.
+          </Typography>
         </Grid>
       )}
       {appointmentDetails && (
@@ -181,7 +221,7 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
                 ))}
               </Box>
             </CardContent>
-            <CardActions>
+            <CardActions disableSpacing className={classes.cardActions}>
               <Button
                 size={isMobile ? "small" : "large"}
                 fullWidth
@@ -190,11 +230,20 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
               >
                 Update Appointment
               </Button>
+              <Button
+                size={isMobile ? "small" : "large"}
+                fullWidth
+                onClick={() => openDeleteAppModal(appointmentId)}
+                variant="contained"
+                color="error"
+              >
+                Delete Appointment
+              </Button>
             </CardActions>
           </Card>
         </Grid>
       )}
-    </>
+    </React.Fragment>
   );
 };
 
@@ -206,4 +255,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AppointmentDetails);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    openDeleteAppModal: (id) => dispatch(openDeleteAppModal(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppointmentDetails);

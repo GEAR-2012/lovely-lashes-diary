@@ -193,7 +193,7 @@ const AppointmentForm = ({
   // pre-fill the form with previous appointmed data if customer Id is given
   // & if there is previous appointment
   useEffect(() => {
-    // Calculates the elapsed time & returns in days
+    // Calculates the elapsed time & returns it in days
     const getElapsedTime = (prevAppointment) => {
       let elapsedTime = 0;
 
@@ -447,6 +447,7 @@ const AppointmentForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isFormValid) {
+      // create or update appointment document
       const actionResult = action(inputData);
       // if the action was success
       if (actionResult) {

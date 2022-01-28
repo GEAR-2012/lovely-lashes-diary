@@ -108,28 +108,37 @@ const CustomerDetails = ({ customerData, deviceData }) => {
 
   // get customer's details from 'customerData' redux store by customer id
   useEffect(() => {
-    const customer = customerData.customers.filter((customer) => {
-      return customer.customerId === customerId;
-    })[0];
+    if (customerData) {
+      const customer = customerData.customers.filter((customer) => {
+        return customer.customerId === customerId;
+      })[0];
 
-    if (customer) {
-      const detailsArray = [
-        ["Name", customer.name],
-        ["Phone", customer.phone],
-        ["Memo", customer.memo],
-      ];
-      setCustomerDetails(detailsArray);
+      if (customer) {
+        const detailsArray = [
+          ["Name", customer.name],
+          ["Phone", customer.phone],
+          ["Memo", customer.memo],
+        ];
+        setCustomerDetails(detailsArray);
+      }
     }
   }, [customerId, customerData]);
 
   return (
-    <>
-      {!customerDetails && (
+    <React.Fragment>
+      {customerData.loading && (
         <Grid item xs={12}>
           <ProgressCircular />
         </Grid>
       )}
-      {customerDetails && (
+      {!customerData.loading && !customerDetails && (
+        <Grid item xs={12}>
+          <Typography variant="h6" color="error">
+            No Customer found with the provided ID.
+          </Typography>
+        </Grid>
+      )}
+      {!customerData.loading && customerDetails && (
         <Grid item xs={12} md={8} lg={6} xl={5}>
           <Card className={classes.card} elevation={4}>
             <CardContent>
@@ -162,7 +171,7 @@ const CustomerDetails = ({ customerData, deviceData }) => {
           </Card>
         </Grid>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

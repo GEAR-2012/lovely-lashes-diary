@@ -34,6 +34,7 @@ import AppointmentUpdate from "./components/pages/AppointmentUpdate";
 import CustomerDetails from "./components/pages/CustomerDetails";
 import AppointmentDetails from "./components/pages/AppointmentDetails";
 import Statistics from "./components/pages/Statistics";
+import DeleteAppointmentModal from "./components/UI/DeleteAppointmentModal";
 
 const App = ({
   userData,
@@ -110,7 +111,7 @@ const App = ({
     if (isUserVerified) {
       appointmentsRequestStarted();
       const collectionRef = collection(db, "appointments");
-      const q = query(collectionRef, orderBy("timeOfAppointment", "asc"));
+      const q = query(collectionRef, orderBy("timeOfAppointment", "desc"));
       const unsub = onSnapshot(
         q,
         (snapshot) => {
@@ -190,8 +191,9 @@ const App = ({
             {/* Not Found */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          <DeleteAppointmentModal />
+          <LoginModal />
         </BrowserRouter>
-        <LoginModal />
         <Alert />
       </Grid>
     </Container>
