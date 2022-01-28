@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Divider, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -28,43 +28,30 @@ const useStyles = makeStyles((theme) => ({
 const Statistics = ({ customerData, appointmentData }) => {
   const classes = useStyles();
 
-  const [loading, setLoading] = useState(null);
-  const [customers, setCustomers] = useState(null);
-  const [appointments, setAppointments] = useState(null);
-  const [statDatas, setStatDatas] = useState(null);
+  console.log(customerData, appointmentData);
 
-  // get customers & appointment into local state
-  useEffect(() => {
-    if (customerData.loading || appointmentData.loading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-    if ((customerData, appointmentData)) {
-      setCustomers(customerData.customers);
-      setAppointments(appointmentData.appointments);
-    }
-  }, [customerData, appointmentData]);
+  let loading = null;
+
+  if (customerData.loading || appointmentData.loading) {
+    loading = true;
+  } else {
+    loading = false;
+  }
 
   // custom hooks
-  const { timeOfFirstAppointment, timeOfLastAppointment } = useFirstLastTime(appointments);
-  const totalPayment = useSumPayments(appointments);
-  const totalTips = useSumTips(appointments);
+  const { timeOfFirstAppointment, timeOfLastAppointment } = useFirstLastTime(appointmentData.appointments);
+  const totalPayment = useSumPayments(appointmentData.appointments);
+  const totalTips = useSumTips(appointmentData.appointments);
 
-  // set up statistic datas into local state
-  useEffect(() => {
-    if (customers && appointments) {
-      setStatDatas({
-        customerCount: customers.length,
-        appointmentCount: appointments.length,
-        timeOfFirstAppointment,
-        timeOfLastAppointment,
-        totalPayment,
-        totalTips,
-        grandTotal: totalPayment + totalTips,
-      });
-    }
-  }, [customers, appointments, timeOfFirstAppointment, timeOfLastAppointment, totalPayment, totalTips]);
+  const statDatas = {
+    customerCount: customerData.customers.length,
+    appointmentCount: appointmentData.appointments.length,
+    timeOfFirstAppointment,
+    timeOfLastAppointment,
+    totalPayment,
+    totalTips,
+    grandTotal: totalPayment + totalTips,
+  };
 
   // page title
   const contentTitle = (

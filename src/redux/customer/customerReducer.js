@@ -1,4 +1,9 @@
-import { CUSTOMERS_REQUEST_STARTED, CUSTOMERS_FAILURE, LISTEN_CUSTOMERS_SUCCESS } from "./customerTypes";
+import {
+  CUSTOMERS_REQUEST_STARTED,
+  CUSTOMERS_FAILURE,
+  LISTEN_CUSTOMERS_SUCCESS,
+  CUSTOMERS_UNLOAD,
+} from "./customerTypes";
 
 const initialState = {
   loading: false,
@@ -8,6 +13,13 @@ const initialState = {
 
 const customersReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CUSTOMERS_UNLOAD:
+      return {
+        ...state,
+        loading: false,
+        customers: [],
+        error: "",
+      };
     case CUSTOMERS_REQUEST_STARTED:
       return {
         ...state,

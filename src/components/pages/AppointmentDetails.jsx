@@ -126,6 +126,13 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
         };
       }
 
+      const comb_1 = `${appointment.curl_1} ${appointment.thickness_1}`;
+
+      let comb_2 = "";
+      if (appointment.curl_2 || appointment.thickness_2) {
+        comb_2 = `${appointment.curl_2} ${appointment.thickness_2}`;
+      }
+
       const detailsArray = [
         ["Customer Name", customerObj.name],
         ["Customer Phone", customerObj.phone],
@@ -134,8 +141,8 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData }) => {
         ["Time of Appointment", formattedTimestamp(appointment.timeOfAppointment)],
         ["Type of Appointment", appointment.typeOfAppointment],
         ["Type of Lashes", appointment.typeOfLashes],
-        ["Curl of Lashes", appointment.curl],
-        ["Thickness of Lashes", appointment.thickness],
+        ["Combination 1", comb_1],
+        ["Combination 2", comb_2],
         ["Length of Lashes", appointment.lashLength.join()],
         ["Shape of Lashes", appointment.shape],
         ["Eyepad usage", appointment.eyepad],

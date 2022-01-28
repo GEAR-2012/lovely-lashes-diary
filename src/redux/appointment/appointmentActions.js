@@ -1,8 +1,19 @@
-import { APPOINTMENTS_REQUEST_STARTED, APPOINTMENTS_FAILURE, LISTEN_APPOINTMENTS_SUCCESS } from "./appointmentTypes";
+import {
+  APPOINTMENTS_REQUEST_STARTED,
+  APPOINTMENTS_FAILURE,
+  LISTEN_APPOINTMENTS_SUCCESS,
+  APPOINTMENTS_UNLOAD,
+} from "./appointmentTypes";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 const unixTimestamp = Date.now();
+
+export const appointmentsUnload = () => {
+  return {
+    type: APPOINTMENTS_UNLOAD,
+  };
+};
 
 export const appointmentsRequestStarted = () => {
   return {

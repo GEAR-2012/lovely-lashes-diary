@@ -86,8 +86,10 @@ const AppointmentForm = ({
       timeOfAppointment: unixTimestamp,
       typeOfAppointment: "",
       typeOfLashes: "",
-      curl: "",
-      thickness: "",
+      curl_1: "",
+      thickness_1: "",
+      curl_2: "",
+      thickness_2: "",
       lashLength: [],
       shape: "",
       eyepad: "",
@@ -103,8 +105,10 @@ const AppointmentForm = ({
     timeOfAppointment: "",
     typeOfAppointment: "",
     typeOfLashes: "",
-    curl: "",
-    thickness: "",
+    curl_1: "",
+    thickness_1: "",
+    curl_2: "",
+    thickness_2: "",
     lashLength: "",
     shape: "",
     eyepad: "",
@@ -134,19 +138,21 @@ const AppointmentForm = ({
 
       // set up the data object to save into 'inputData' local state and so fill the form
       const appData = {
-        curl: getAppointmentToUpdate.curl,
         customerId: getAppointmentToUpdate.customerId,
-        elapsedTime: getAppointmentToUpdate.elapsedTime,
-        eyepad: getAppointmentToUpdate.eyepad,
-        lashLength: getAppointmentToUpdate.lashLength,
-        memo: getAppointmentToUpdate.memo,
-        payment: getAppointmentToUpdate.payment,
-        shape: getAppointmentToUpdate.shape,
-        thickness: getAppointmentToUpdate.thickness,
         timeOfAppointment: getAppointmentToUpdate.timeOfAppointment,
-        tips: getAppointmentToUpdate.tips,
+        elapsedTime: getAppointmentToUpdate.elapsedTime,
         typeOfAppointment: getAppointmentToUpdate.typeOfAppointment,
         typeOfLashes: getAppointmentToUpdate.typeOfLashes,
+        curl_1: getAppointmentToUpdate.curl_1,
+        curl_2: getAppointmentToUpdate.curl_2,
+        thickness_1: getAppointmentToUpdate.thickness_1,
+        thickness_2: getAppointmentToUpdate.thickness_2,
+        lashLength: getAppointmentToUpdate.lashLength,
+        shape: getAppointmentToUpdate.shape,
+        eyepad: getAppointmentToUpdate.eyepad,
+        payment: getAppointmentToUpdate.payment,
+        tips: getAppointmentToUpdate.tips,
+        memo: getAppointmentToUpdate.memo,
       };
 
       // get the appointment & set it into the local state
@@ -206,30 +212,34 @@ const AppointmentForm = ({
       if (previousAppointment) {
         elapsedTime = getElapsedTime(previousAppointment);
         if (isNaN(elapsedTime)) elapsedTime = "Can not be calculated";
-        const curl = previousAppointment.curl;
-        const eyepad = previousAppointment.eyepad;
-        const lashLength = previousAppointment.lashLength;
-        const memo = previousAppointment.memo;
-        const payment = previousAppointment.payment;
-        const shape = previousAppointment.shape;
-        const thickness = previousAppointment.thickness;
-        const tips = previousAppointment.tips;
         const typeOfAppointment = previousAppointment.typeOfAppointment;
         const typeOfLashes = previousAppointment.typeOfLashes;
+        const curl_1 = previousAppointment.curl_1;
+        const thickness_1 = previousAppointment.thickness_1;
+        const curl_2 = previousAppointment.curl_2;
+        const thickness_2 = previousAppointment.thickness_2;
+        const lashLength = previousAppointment.lashLength;
+        const shape = previousAppointment.shape;
+        const eyepad = previousAppointment.eyepad;
+        const payment = previousAppointment.payment;
+        const tips = previousAppointment.tips;
+        const memo = previousAppointment.memo;
 
         setInputData((prevState) => ({
           ...prevState,
-          curl,
-          eyepad,
-          lashLength,
-          memo,
-          payment,
-          shape,
-          thickness,
-          tips,
+          elapsedTime,
           typeOfAppointment,
           typeOfLashes,
-          elapsedTime,
+          curl_1,
+          thickness_1,
+          curl_2,
+          thickness_2,
+          lashLength,
+          shape,
+          eyepad,
+          payment,
+          tips,
+          memo,
         }));
       } else if (!previousAppointment && inputData.customerId) {
         elapsedTime = "first appointment";
@@ -249,16 +259,18 @@ const AppointmentForm = ({
       !isNaN(inputData.timeOfAppointment) &&
       inputData.typeOfAppointment &&
       inputData.typeOfLashes &&
-      inputData.curl &&
-      inputData.thickness &&
+      inputData.curl_1 &&
+      inputData.thickness_1 &&
       inputData.lashLength.length > 0 &&
       inputData.shape &&
       inputData.eyepad &&
       // there is no error
       !inputErrData.customerId &&
-      !inputErrData.curl &&
+      !inputErrData.curl_1 &&
+      !inputErrData.thickness_1 &&
+      !inputErrData.curl_2 &&
+      !inputErrData.thickness_2 &&
       !inputErrData.timeOfAppointment &&
-      !inputErrData.thickness &&
       !inputErrData.typeOfAppointment &&
       !inputErrData.typeOfLashes &&
       !inputErrData.lashLength &&
@@ -363,16 +375,16 @@ const AppointmentForm = ({
           typeOfLashes: checkIfExists(inputData.typeOfLashes),
         }));
         break;
-      case "curl":
+      case "curl_1":
         setInputErrData((prevState) => ({
           ...prevState,
-          curl: checkIfExists(inputData.curl),
+          curl_1: checkIfExists(inputData.curl_1),
         }));
         break;
-      case "thickness":
+      case "thickness_1":
         setInputErrData((prevState) => ({
           ...prevState,
-          thickness: checkIfExists(inputData.thickness),
+          thickness_1: checkIfExists(inputData.thickness_1),
         }));
         break;
       case "lashLength":
@@ -514,27 +526,49 @@ const AppointmentForm = ({
           handleBlur={handleInputBlur}
           required={true}
         />
-        {/* Curl */}
+        {/* Curl 1 */}
         <SingleSelect
-          error={inputErrData.curl}
-          label="Curl of Lashes"
-          name="curl"
-          value={inputData.curl}
+          error={inputErrData.curl_1}
+          label="Curl of Lashes 1"
+          name="curl_1"
+          value={inputData.curl_1}
           options={curlTypes}
           handleChange={handleInputChange}
           handleBlur={handleInputBlur}
           required={true}
         />
-        {/* Thickness */}
+        {/* Thickness 1 */}
         <SingleSelect
-          error={inputErrData.thickness}
-          label="Thickness of Lashes"
-          name="thickness"
-          value={inputData.thickness}
+          error={inputErrData.thickness_1}
+          label="Thickness of Lashes 1"
+          name="thickness_1"
+          value={inputData.thickness_1}
           options={thicknesses}
           handleChange={handleInputChange}
           handleBlur={handleInputBlur}
           required={true}
+        />
+        {/* Curl 2 */}
+        <SingleSelect
+          error={inputErrData.curl_2}
+          label="Curl of Lashes 2"
+          name="curl_2"
+          value={inputData.curl_2}
+          options={curlTypes}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={false}
+        />
+        {/* Thickness 2 */}
+        <SingleSelect
+          error={inputErrData.thickness_2}
+          label="Thickness of Lashes 2"
+          name="thickness_2"
+          value={inputData.thickness_2}
+          options={thicknesses}
+          handleChange={handleInputChange}
+          handleBlur={handleInputBlur}
+          required={false}
         />
         {/* Lash Length */}
         <MultipleSelect

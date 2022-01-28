@@ -22,9 +22,11 @@ import {
   customersRequestStarted,
   listenToCustomersSuccess,
   customersFailure,
+  customersUnload,
   appointmentsRequestStarted,
   listenToAppointmentsSuccess,
   appointmentsFailure,
+  appointmentsUnload,
   alertOpen,
   deviceSet,
 } from "./redux";
@@ -41,11 +43,15 @@ const App = ({
   customersRequestStarted,
   listenToCustomersSuccess,
   customersFailure,
+  customersUnload,
   appointmentsRequestStarted,
   listenToAppointmentsSuccess,
   appointmentsFailure,
+  appointmentsUnload,
   alertOpen,
   deviceSet,
+  customerData,
+  appointmentData,
 }) => {
   const [isUserVerified, setIsUserVerified] = useState(false);
 
@@ -61,6 +67,8 @@ const App = ({
         });
       } else {
         userUnset();
+        customersUnload();
+        appointmentsUnload();
         alertOpen({
           severity: "success",
           message: "You are successfully logged out.",
@@ -68,34 +76,7 @@ const App = ({
       }
     });
     return unsub;
-  }, [alertOpen, userUnset, userSet, userRequestStarted]);
-
-  // Listen to appointment list change
-  useEffect(() => {
-    if (isUserVerified) {
-      appointmentsRequestStarted();
-      const collectionRef = collection(db, "appointments");
-      const q = query(collectionRef, orderBy("timeOfAppointment", "asc"));
-      const unsub = onSnapshot(
-        q,
-        (snapshot) => {
-          const appointments = [];
-          snapshot.forEach((doc) => {
-            appointments.push({
-              appointmentId: doc.id,
-              ...doc.data(),
-            });
-          });
-          listenToAppointmentsSuccess(appointments);
-        },
-
-        (error) => {
-          appointmentsFailure(error.message);
-        }
-      );
-      return unsub;
-    }
-  }, [isUserVerified, appointmentsFailure, appointmentsRequestStarted, listenToAppointmentsSuccess]);
+  }, [alertOpen, userUnset, userSet, userRequestStarted, customersUnload, appointmentsUnload]);
 
   // Listen to customer list change
   useEffect(() => {
@@ -123,6 +104,33 @@ const App = ({
       return unsub;
     }
   }, [isUserVerified, customersFailure, customersRequestStarted, listenToCustomersSuccess]);
+
+  // Listen to appointment list change
+  useEffect(() => {
+    if (isUserVerified) {
+      appointmentsRequestStarted();
+      const collectionRef = collection(db, "appointments");
+      const q = query(collectionRef, orderBy("timeOfAppointment", "asc"));
+      const unsub = onSnapshot(
+        q,
+        (snapshot) => {
+          const appointments = [];
+          snapshot.forEach((doc) => {
+            appointments.push({
+              appointmentId: doc.id,
+              ...doc.data(),
+            });
+          });
+          listenToAppointmentsSuccess(appointments);
+        },
+
+        (error) => {
+          appointmentsFailure(error.message);
+        }
+      );
+      return unsub;
+    }
+  }, [isUserVerified, appointmentsFailure, appointmentsRequestStarted, listenToAppointmentsSuccess]);
 
   // get the size of the device screen
   const getDeviceScreenDimensions = () => {
@@ -193,6 +201,8 @@ const App = ({
 const mapStateToProps = (state) => {
   return {
     userData: state.user,
+    customerData: state.customer,
+    appointmentData: state.appointment,
   };
 };
 
@@ -206,10 +216,12 @@ const mapDispatchToProps = (dispatch) => {
     customersRequestStarted: () => dispatch(customersRequestStarted()),
     listenToCustomersSuccess: (inp) => dispatch(listenToCustomersSuccess(inp)),
     customersFailure: (inp) => dispatch(customersFailure(inp)),
+    customersUnload: () => dispatch(customersUnload()),
     // firestore (appointments)
     appointmentsRequestStarted: () => dispatch(appointmentsRequestStarted()),
     listenToAppointmentsSuccess: (inp) => dispatch(listenToAppointmentsSuccess(inp)),
     appointmentsFailure: (inp) => dispatch(appointmentsFailure(inp)),
+    appointmentsUnload: (inp) => dispatch(appointmentsUnload(inp)),
     // alert
     alertOpen: (inp) => dispatch(alertOpen(inp)),
     // device

@@ -1,8 +1,19 @@
-import { CUSTOMERS_REQUEST_STARTED, CUSTOMERS_FAILURE, LISTEN_CUSTOMERS_SUCCESS } from "./customerTypes";
+import {
+  CUSTOMERS_REQUEST_STARTED,
+  CUSTOMERS_FAILURE,
+  LISTEN_CUSTOMERS_SUCCESS,
+  CUSTOMERS_UNLOAD,
+} from "./customerTypes";
 import { db } from "../../firebase/config";
-import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 const unixTimestamp = Date.now();
+
+export const customersUnload = () => {
+  return {
+    type: CUSTOMERS_UNLOAD,
+  };
+};
 
 export const customersRequestStarted = () => {
   return {
@@ -61,25 +72,6 @@ export const updateCustomer = (docId, customerData) => {
 
     try {
       updateDocument().catch((error) => dispatch(customersFailure(error)));
-    } catch (error) {
-      dispatch(customersFailure(error));
-    }
-  };
-};
-
-// DELETE
-export const deleteCustomer = (id) => {
-  return (dispatch) => {
-    dispatch(customersRequestStarted());
-
-    const deleteDocument = async (id) => {
-      const docRef = doc(db, "customers", id);
-      const prom = await deleteDoc(docRef);
-      return prom;
-    };
-
-    try {
-      deleteDocument(id).catch((error) => dispatch(customersFailure(error)));
     } catch (error) {
       dispatch(customersFailure(error));
     }

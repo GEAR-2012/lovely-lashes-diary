@@ -13,9 +13,11 @@ const useFirstLastTime = (appointments) => {
         return a.timeOfAppointment - b.timeOfAppointment;
       });
 
-      const timeOfFirstAppointment = formattedTimestamp(appointments.shift()?.timeOfAppointment);
+      const copyAppointments = [...appointments];
 
-      const timeOfLastAppointment = formattedTimestamp(appointments.pop()?.timeOfAppointment);
+      const timeOfFirstAppointment = formattedTimestamp(copyAppointments.shift()?.timeOfAppointment);
+
+      const timeOfLastAppointment = formattedTimestamp(copyAppointments.pop()?.timeOfAppointment);
 
       setResult({
         timeOfFirstAppointment,

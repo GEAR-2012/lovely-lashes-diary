@@ -1,4 +1,9 @@
-import { APPOINTMENTS_REQUEST_STARTED, APPOINTMENTS_FAILURE, LISTEN_APPOINTMENTS_SUCCESS } from "./appointmentTypes";
+import {
+  APPOINTMENTS_REQUEST_STARTED,
+  APPOINTMENTS_FAILURE,
+  LISTEN_APPOINTMENTS_SUCCESS,
+  APPOINTMENTS_UNLOAD,
+} from "./appointmentTypes";
 
 const initialState = {
   loading: false,
@@ -8,6 +13,12 @@ const initialState = {
 
 const appointmentReducer = (state = initialState, action) => {
   switch (action.type) {
+    case APPOINTMENTS_UNLOAD:
+      return {
+        loading: false,
+        appointments: [],
+        error: "",
+      };
     case APPOINTMENTS_REQUEST_STARTED:
       return {
         ...state,

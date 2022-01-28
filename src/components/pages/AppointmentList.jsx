@@ -93,8 +93,8 @@ const AppointmentList = ({ customerData, appointmentData }) => {
     { field: "timeOfAppointment", headerName: "Time of Appointment", width: 200 },
     { field: "typeOfAppointment", headerName: "Type of Appointment", width: 160 },
     { field: "typeOfLashes", headerName: "Type of Lashes", width: 160 },
-    { field: "curl", headerName: "Curl", width: 60 },
-    { field: "thickness", headerName: "Thickness", width: 100, type: "number" },
+    { field: "combination_1", headerName: "Combination 1", width: 160 },
+    { field: "combination_2", headerName: "Combination 2", width: 160 },
     { field: "lashLength", headerName: "Length", width: 210 },
     { field: "shape", headerName: "Shape", width: 100 },
     { field: "eyepad", headerName: "Eye Pad", width: 200 },
@@ -120,6 +120,13 @@ const AppointmentList = ({ customerData, appointmentData }) => {
           customerName = customerObj.name;
         }
 
+        const comb_1 = `${appointment.curl_1} ${appointment.thickness_1}`;
+
+        let comb_2 = "";
+        if (appointment.curl_2 || appointment.thickness_2) {
+          comb_2 = `${appointment.curl_2} ${appointment.thickness_2}`;
+        }
+
         const row = {
           id: appointment.appointmentId,
           name: customerName,
@@ -127,8 +134,8 @@ const AppointmentList = ({ customerData, appointmentData }) => {
           timeOfAppointment: formattedTimestamp(appointment.timeOfAppointment),
           typeOfAppointment: appointment.typeOfAppointment,
           typeOfLashes: appointment.typeOfLashes,
-          curl: appointment.curl,
-          thickness: appointment.thickness,
+          combination_1: comb_1,
+          combination_2: comb_2,
           lashLength: appointment.lashLength.join(),
           shape: appointment.shape,
           eyepad: appointment.eyepad,
