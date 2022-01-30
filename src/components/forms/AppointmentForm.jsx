@@ -49,9 +49,30 @@ const AppointmentForm = ({
   deviceData,
 }) => {
   const classes = useStyles();
-  const unixTimestamp = useMemo(() => Date.now(), []);
+  // originally used for the new appointment initial time (depricated)
+  // changed to timeOfLastApp
+  // const unixTimestamp = useMemo(() => Date.now(), []);
   const navigate = useNavigate();
   const isMobile = deviceData.isMobile;
+  const [timeOfLastApp, setTimeOfLastApp] = useState();
+
+  // get the time of the last appointment of all
+  useEffect(() => {
+    if (appointmentData.appointments.length > 0) {
+      // copy appointments
+      const sortedAppointments = [...appointmentData.appointments];
+      // ...sort by appointment time
+      sortedAppointments.sort((a, b) => {
+        return b.timeOfAppointment - a.timeOfAppointment;
+      });
+      // get the last one
+      const lastApp = sortedAppointments[0];
+      // ...get it's time
+      const lastAppTime = lastApp.timeOfAppointment;
+      // set into a local state
+      setTimeOfLastApp(lastAppTime);
+    }
+  }, [appointmentData.appointments]);
 
   // making options for multiple select field
   const options = customerData.customers.map((customer) => {
@@ -65,7 +86,7 @@ const AppointmentForm = ({
 
   // possible select options
   const appointmentTypes = ["Taster", "Full", "Infill"];
-  const lashesTypes = ["1D Cashmere Glossy", "1D Cashmere Matte", "2D-3D Volume", "Mega Volume", "Hybrid"];
+  const lashesTypes = ["1D Cashmere Glossy", "1D Cashmere Matte", "2D-3D Volume", "3D Volume", "Mega Volume", "Hybrid"];
   const curlTypes = ["J", "B", "C", "D", "CC", "D+"];
   const thicknesses = ["0.05", "0.07", "0.10", "0.15", "0.20", "0.25"];
   const lashLengths = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
@@ -83,7 +104,7 @@ const AppointmentForm = ({
     return {
       customerId: "",
       elapsedTime: 0,
-      timeOfAppointment: unixTimestamp,
+      timeOfAppointment: timeOfLastApp,
       typeOfAppointment: "",
       typeOfLashes: "",
       curl_1: "",
@@ -97,7 +118,7 @@ const AppointmentForm = ({
       tips: 0,
       memo: "",
     };
-  }, [unixTimestamp]);
+  }, [timeOfLastApp]);
 
   const initInputErrData = {
     customerId: "",
@@ -163,7 +184,7 @@ const AppointmentForm = ({
     }
   }, [idOfAppointmentToUpdate, appointmentData.appointments, initInputData]);
 
-  // get all data of last appointment & set it into a local state
+  // get all data of last appointment (based on customerId) & set it into a local state
   useEffect(() => {
     if (!appointmentId) {
       if (inputData.customerId) {
