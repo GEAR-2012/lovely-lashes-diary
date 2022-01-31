@@ -71,7 +71,7 @@ const LoginForm = ({ userData, alertOpen, loginUser, closeLoginModal, deviceData
     } else {
       alertOpen({
         severity: "warning",
-        message: "Form doesn't valid yet",
+        message: "Form isn't valid yet",
       });
     }
   };

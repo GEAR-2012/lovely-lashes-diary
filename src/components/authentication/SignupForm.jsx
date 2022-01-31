@@ -104,7 +104,7 @@ const SignupForm = ({ userData, createUser, alertOpen, closeLoginModal, deviceDa
     } else {
       alertOpen({
         severity: "warning",
-        message: "Form doesn't valid yet",
+        message: "Form isn't valid yet",
       });
     }
   };
