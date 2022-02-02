@@ -200,7 +200,17 @@ const AppointmentForm = ({
         };
       });
     }
-  }, [inputData.typeOfAppointment]);
+  }, [
+    inputData.typeOfAppointment,
+    inputData.typeOfLashes,
+    inputData.curl_1,
+    inputData.thickness_1,
+    inputData.curl_2,
+    inputData.thickness_2,
+    inputData.lashLength,
+    inputData.shape,
+    inputData.eyepad,
+  ]);
 
   // set appointment id into local state, if given (only in update mode!!!)
   useEffect(() => {
