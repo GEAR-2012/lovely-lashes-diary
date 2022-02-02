@@ -158,9 +158,31 @@ const AppointmentForm = ({
   // if user select 'Tint' as type of appointment
   // set all other params to not applied & input fields to disabled
   // otherwise back to normal
-  useEffect(() => {
-    const type = inputData.typeOfAppointment;
-    const notApplicableParams = {
+  const tintResetParams = useMemo(
+    () => ({
+      typeOfLashes: inputData.typeOfLashes === "-" ? "" : inputData.typeOfLashes,
+      curl_1: inputData.curl_1 === "-" ? "" : inputData.curl_1,
+      thickness_1: inputData.thickness_1 === "-" ? "" : inputData.thickness_1,
+      curl_2: inputData.curl_2 === "-" ? "" : inputData.curl_2,
+      thickness_2: inputData.thickness_2 === "-" ? "" : inputData.thickness_2,
+      lashLength: inputData.lashLength[0] === "-" ? [] : inputData.lashLength,
+      shape: inputData.shape === "-" ? "" : inputData.shape,
+      eyepad: inputData.eyepad === "-" ? "" : inputData.eyepad,
+    }),
+    [
+      inputData.typeOfLashes,
+      inputData.curl_1,
+      inputData.thickness_1,
+      inputData.curl_2,
+      inputData.thickness_2,
+      inputData.lashLength,
+      inputData.shape,
+      inputData.eyepad,
+    ]
+  );
+
+  const notApplicableParams = useMemo(
+    () => ({
       typeOfLashes: "-",
       curl_1: "-",
       thickness_1: "-",
@@ -169,48 +191,35 @@ const AppointmentForm = ({
       lashLength: ["-"],
       shape: "-",
       eyepad: "-",
-    };
+    }),
+    []
+  );
 
-    const resetParams = {
-      typeOfLashes: inputData.typeOfLashes === "-" ? "" : inputData.typeOfLashes,
-      curl_1: inputData.curl_1 === "-" ? "" : inputData.curl_1,
-      thickness_1: inputData.thickness_1 === "-" ? "" : inputData.thickness_1,
-      curl_2: inputData.curl_2 === "-" ? "" : inputData.curl_2,
-      thickness_2: inputData.thickness_2 === "-" ? "" : inputData.thickness_2,
-      lashLength: inputData.lashLength === ["-"] ? [] : inputData.lashLength,
-      shape: inputData.shape === "-" ? "" : inputData.shape,
-      eyepad: inputData.eyepad === "-" ? "" : inputData.eyepad,
-    };
+  useEffect(() => {
+    const type = inputData.typeOfAppointment;
+    console.log(type);
 
-    if (type === "Tint") {
-      // ...do something
-      setIsTint(true);
-      setInputData((prevState) => {
-        return {
-          ...prevState,
-          ...notApplicableParams,
-        };
-      });
-    } else {
-      setIsTint(false);
-      setInputData((prevState) => {
-        return {
-          ...prevState,
-          ...resetParams,
-        };
-      });
+    if (type) {
+      if (type === "Tint") {
+        // ...do something
+        setIsTint(true);
+        setInputData((prevState) => {
+          return {
+            ...prevState,
+            ...notApplicableParams,
+          };
+        });
+      } else {
+        setIsTint(false);
+        setInputData((prevState) => {
+          return {
+            ...prevState,
+            ...tintResetParams,
+          };
+        });
+      }
     }
-  }, [
-    inputData.typeOfAppointment,
-    inputData.typeOfLashes,
-    inputData.curl_1,
-    inputData.thickness_1,
-    inputData.curl_2,
-    inputData.thickness_2,
-    inputData.lashLength,
-    inputData.shape,
-    inputData.eyepad,
-  ]);
+  }, [inputData.typeOfAppointment, tintResetParams, notApplicableParams]);
 
   // set appointment id into local state, if given (only in update mode!!!)
   useEffect(() => {
