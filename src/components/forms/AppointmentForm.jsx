@@ -5,6 +5,7 @@ import SingleSelect from "../formComponents/SingleSelect";
 import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import CombiTextfield from "../formComponents/CombiTextfield";
 import Currency from "../formComponents/Currency";
+import ProgressCircular from "../UI/ProgressCircular";
 import {
   numberToCurrency,
   timestampToDatetimePickerFormat,
@@ -86,11 +87,19 @@ const AppointmentForm = ({
 
   // possible select options
   const appointmentTypes = ["Taster", "Full", "Infill", "Tint", "Bottom Lashes"];
-  const lashesTypes = ["1D Cashmere Glossy", "1D Cashmere Matte", "2D-3D Volume", "3D Volume", "Mega Volume", "Hybrid"];
-  const curlTypes = ["J", "B", "C", "D", "CC", "D+"];
-  const thicknesses = ["0.05", "0.07", "0.10", "0.15", "0.20", "0.25"];
-  const lashLengths = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-  const shapes = ["Normal", "Doll-Eye", "Cat-Eye", "Cat-Normal"];
+  const lashesTypes = [
+    "1D Cashmere Glossy",
+    "1D Cashmere Matte",
+    "2D-3D Volume",
+    "3D Volume",
+    "Mega Volume",
+    "Hybrid",
+    "-",
+  ];
+  const curlTypes = ["J", "B", "C", "D", "CC", "D+", "-"];
+  const thicknesses = ["0.05", "0.07", "0.10", "0.15", "0.20", "0.25", "-"];
+  const lashLengths = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, "-"];
+  const shapes = ["Normal", "Doll-Eye", "Cat-Eye", "Cat-Normal", "-"];
   const eyepadTypes = [
     "Normal Same Time",
     "Normal Separate",
@@ -98,6 +107,7 @@ const AppointmentForm = ({
     "Sensitive Separate",
     "Little Sensitive Separate",
     "Little Sensitive Same Time",
+    "-",
   ];
 
   const initInputData = useMemo(() => {
@@ -143,6 +153,54 @@ const AppointmentForm = ({
   const [inputErrData, setInputErrData] = useState(initInputErrData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [previousAppointment, setPreviousAppointment] = useState();
+  const [isTint, setIsTint] = useState(false); // to disable inputs
+
+  // if user select 'Tint' as type of appointment
+  // set all other params to not applied & input fields to disabled
+  // otherwise back to normal
+  useEffect(() => {
+    const type = inputData.typeOfAppointment;
+    const notApplicableParams = {
+      typeOfLashes: "-",
+      curl_1: "-",
+      thickness_1: "-",
+      curl_2: "-",
+      thickness_2: "-",
+      lashLength: ["-"],
+      shape: "-",
+      eyepad: "-",
+    };
+
+    const resetParams = {
+      typeOfLashes: "",
+      curl_1: "",
+      thickness_1: "",
+      curl_2: "",
+      thickness_2: "",
+      lashLength: [],
+      shape: "",
+      eyepad: "",
+    };
+
+    if (type === "Tint") {
+      // ...do something
+      setIsTint(true);
+      setInputData((prevState) => {
+        return {
+          ...prevState,
+          ...notApplicableParams,
+        };
+      });
+    } else {
+      setIsTint(false);
+      setInputData((prevState) => {
+        return {
+          ...prevState,
+          ...resetParams,
+        };
+      });
+    }
+  }, [inputData.typeOfAppointment]);
 
   // set appointment id into local state, if given (only in update mode!!!)
   useEffect(() => {
@@ -484,8 +542,13 @@ const AppointmentForm = ({
     }
   };
 
+  let contentProgress = "";
+  if (!timeOfLastApp) {
+    contentProgress = <ProgressCircular />;
+  }
+
   let contentForm = "";
-  if (inputData) {
+  if (inputData && timeOfLastApp) {
     contentForm = (
       <form autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
         {/* Select Customer */}
@@ -539,6 +602,7 @@ const AppointmentForm = ({
         />
         {/* Type of Lashes */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.typeOfLashes}
           label="Type of Lashes"
           name="typeOfLashes"
@@ -550,6 +614,7 @@ const AppointmentForm = ({
         />
         {/* Curl 1 */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.curl_1}
           label="Curl of Lashes 1"
           name="curl_1"
@@ -561,6 +626,7 @@ const AppointmentForm = ({
         />
         {/* Thickness 1 */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.thickness_1}
           label="Thickness of Lashes 1"
           name="thickness_1"
@@ -572,6 +638,7 @@ const AppointmentForm = ({
         />
         {/* Curl 2 */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.curl_2}
           label="Curl of Lashes 2"
           name="curl_2"
@@ -583,6 +650,7 @@ const AppointmentForm = ({
         />
         {/* Thickness 2 */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.thickness_2}
           label="Thickness of Lashes 2"
           name="thickness_2"
@@ -594,6 +662,7 @@ const AppointmentForm = ({
         />
         {/* Lash Length */}
         <MultipleSelect
+          disabled={isTint}
           error={inputErrData.lashLength}
           initValue={inputData.lashLength}
           name="lashLength"
@@ -606,6 +675,7 @@ const AppointmentForm = ({
         />
         {/* Shape */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.shape}
           label="Shape of Lashes"
           name="shape"
@@ -617,6 +687,7 @@ const AppointmentForm = ({
         />
         {/* Pad */}
         <SingleSelect
+          disabled={isTint}
           error={inputErrData.eyepad}
           label="Eye Pad usage"
           name="eyepad"
@@ -671,6 +742,7 @@ const AppointmentForm = ({
         <Typography variant="h4" className={classes.formTitle}>
           {formTitle}
         </Typography>
+        {contentProgress}
         {contentForm}
       </Paper>
     </Grid>

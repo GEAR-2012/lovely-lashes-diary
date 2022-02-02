@@ -25,7 +25,18 @@ function getStyles(option, selectedOptions, theme) {
   };
 }
 
-const MultipleSelect = ({ handleBlur, error, initValue, name, label, options, size, getOptions, required }) => {
+const MultipleSelect = ({
+  handleBlur,
+  error,
+  initValue,
+  name,
+  label,
+  options,
+  size,
+  getOptions,
+  required,
+  disabled,
+}) => {
   const theme = useTheme();
 
   useEffect(() => {
@@ -48,7 +59,7 @@ const MultipleSelect = ({ handleBlur, error, initValue, name, label, options, si
 
   return (
     <div>
-      <FormControl error={!!error} size={size} fullWidth required={required}>
+      <FormControl disabled={disabled} error={!!error} size={size} fullWidth required={required}>
         <InputLabel id="multiple-select-label">{label}</InputLabel>
         <Select
           name={name}

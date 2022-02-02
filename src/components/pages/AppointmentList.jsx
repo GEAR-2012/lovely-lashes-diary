@@ -116,11 +116,13 @@ const AppointmentList = ({ customerData, appointmentData }) => {
           return cust.customerId === appointment.customerId;
         })[0];
 
+        // customer datas
         let customerName = "Unknown";
         if (customerObj) {
           customerName = customerObj.name;
         }
 
+        // appointment datas
         const comb_1 = `${appointment.curl_1} ${appointment.thickness_1}`;
 
         let comb_2 = "";

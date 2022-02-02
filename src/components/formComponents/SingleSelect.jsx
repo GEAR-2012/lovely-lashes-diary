@@ -1,9 +1,9 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
 
-const SingleSelect = ({ handleBlur, error, label, name, value, options, handleChange, required }) => {
+const SingleSelect = ({ handleBlur, error, label, name, value, options, handleChange, required, disabled }) => {
   return (
-    <FormControl error={!!error} fullWidth required={required}>
+    <FormControl disabled={disabled} error={!!error} fullWidth required={required}>
       <InputLabel size="small" id={name}>
         {label}
       </InputLabel>
