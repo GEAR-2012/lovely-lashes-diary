@@ -172,14 +172,14 @@ const AppointmentForm = ({
     };
 
     const resetParams = {
-      typeOfLashes: "",
-      curl_1: "",
-      thickness_1: "",
-      curl_2: "",
-      thickness_2: "",
-      lashLength: [],
-      shape: "",
-      eyepad: "",
+      typeOfLashes: inputData.typeOfLashes === "-" ? "" : inputData.typeOfLashes,
+      curl_1: inputData.curl_1 === "-" ? "" : inputData.curl_1,
+      thickness_1: inputData.thickness_1 === "-" ? "" : inputData.thickness_1,
+      curl_2: inputData.curl_2 === "-" ? "" : inputData.curl_2,
+      thickness_2: inputData.thickness_2 === "-" ? "" : inputData.thickness_2,
+      lashLength: inputData.lashLength === ["-"] ? [] : inputData.lashLength,
+      shape: inputData.shape === "-" ? "" : inputData.shape,
+      eyepad: inputData.eyepad === "-" ? "" : inputData.eyepad,
     };
 
     if (type === "Tint") {
