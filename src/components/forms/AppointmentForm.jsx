@@ -86,7 +86,7 @@ const AppointmentForm = ({
   });
 
   // possible select options
-  const appointmentTypes = ["Taster", "Full", "Infill", "Tint", "Bottom Lashes"];
+  const appointmentTypes = ["Taster", "Full", "Infill", "Removal", "Tint", "Bottom Lashes"];
   const lashesTypes = [
     "1D Cashmere Glossy",
     "1D Cashmere Matte",

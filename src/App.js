@@ -35,6 +35,7 @@ import CustomerDetails from "./components/pages/CustomerDetails";
 import AppointmentDetails from "./components/pages/AppointmentDetails";
 import Statistics from "./components/pages/Statistics";
 import DeleteAppointmentModal from "./components/UI/DeleteAppointmentModal";
+import RegularCustomers from "./components/pages/RegularCustomers";
 
 const App = ({
   userData,
@@ -188,6 +189,7 @@ const App = ({
             <Route path="/appointment_list" element={isUserVerified ? <AppointmentList /> : <LandingPage />} />
             <Route path="/customer_list" element={isUserVerified ? <CustomerList /> : <LandingPage />} />
             <Route path="/statistics" element={isUserVerified ? <Statistics /> : <LandingPage />} />
+            <Route path="regular_customers" element={isUserVerified ? <RegularCustomers /> : <LandingPage />} />
             {/* Not Found */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
