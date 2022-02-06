@@ -153,12 +153,12 @@ const AppointmentForm = ({
   const [inputErrData, setInputErrData] = useState(initInputErrData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [previousAppointment, setPreviousAppointment] = useState();
-  const [isTint, setIsTint] = useState(false); // to disable inputs
+  const [isNoDetails, setIsNoDetails] = useState(false); // to disable inputs
 
-  // if user select 'Tint' as type of appointment
+  // if user select 'Tint' or 'Removal' as type of appointment
   // set all other params to not applied & input fields to disabled
   // otherwise back to normal
-  const tintResetParams = useMemo(
+  const noDetailsResetParams = useMemo(
     () => ({
       typeOfLashes: inputData.typeOfLashes === "-" ? "" : inputData.typeOfLashes,
       curl_1: inputData.curl_1 === "-" ? "" : inputData.curl_1,
@@ -200,9 +200,9 @@ const AppointmentForm = ({
     console.log(type);
 
     if (type) {
-      if (type === "Tint") {
+      if (type === "Tint" || type === "Removal") {
         // ...do something
-        setIsTint(true);
+        setIsNoDetails(true);
         setInputData((prevState) => {
           return {
             ...prevState,
@@ -210,16 +210,16 @@ const AppointmentForm = ({
           };
         });
       } else {
-        setIsTint(false);
+        setIsNoDetails(false);
         setInputData((prevState) => {
           return {
             ...prevState,
-            ...tintResetParams,
+            ...noDetailsResetParams,
           };
         });
       }
     }
-  }, [inputData.typeOfAppointment, tintResetParams, notApplicableParams]);
+  }, [inputData.typeOfAppointment, noDetailsResetParams, notApplicableParams]);
 
   // set appointment id into local state, if given (only in update mode!!!)
   useEffect(() => {
@@ -621,7 +621,7 @@ const AppointmentForm = ({
         />
         {/* Type of Lashes */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.typeOfLashes}
           label="Type of Lashes"
           name="typeOfLashes"
@@ -633,7 +633,7 @@ const AppointmentForm = ({
         />
         {/* Curl 1 */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.curl_1}
           label="Curl of Lashes 1"
           name="curl_1"
@@ -645,7 +645,7 @@ const AppointmentForm = ({
         />
         {/* Thickness 1 */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.thickness_1}
           label="Thickness of Lashes 1"
           name="thickness_1"
@@ -657,7 +657,7 @@ const AppointmentForm = ({
         />
         {/* Curl 2 */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.curl_2}
           label="Curl of Lashes 2"
           name="curl_2"
@@ -669,7 +669,7 @@ const AppointmentForm = ({
         />
         {/* Thickness 2 */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.thickness_2}
           label="Thickness of Lashes 2"
           name="thickness_2"
@@ -681,7 +681,7 @@ const AppointmentForm = ({
         />
         {/* Lash Length */}
         <MultipleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.lashLength}
           initValue={inputData.lashLength}
           name="lashLength"
@@ -694,7 +694,7 @@ const AppointmentForm = ({
         />
         {/* Shape */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.shape}
           label="Shape of Lashes"
           name="shape"
@@ -706,7 +706,7 @@ const AppointmentForm = ({
         />
         {/* Pad */}
         <SingleSelect
-          disabled={isTint}
+          disabled={isNoDetails}
           error={inputErrData.eyepad}
           label="Eye Pad usage"
           name="eyepad"
