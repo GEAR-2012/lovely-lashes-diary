@@ -1,12 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Divider, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import useFirstLastTime from "../../hooks/useFirstLastTime";
-import useSumPayments from "../../hooks/useSumPayments";
-import useSumTips from "../../hooks/useSumTips";
-import { displayCurrency } from "../../functions";
 import ProgressCircular from "../UI/ProgressCircular";
+import useFirstLastTime from "../../hooks/useFirstLastTime";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -38,17 +35,12 @@ const Statistics = ({ customerData, appointmentData }) => {
 
   // custom hooks
   const { timeOfFirstAppointment, timeOfLastAppointment } = useFirstLastTime(appointmentData.appointments);
-  const totalPayment = useSumPayments(appointmentData.appointments);
-  const totalTips = useSumTips(appointmentData.appointments);
 
   const statDatas = {
     customerCount: customerData.customers.length,
     appointmentCount: appointmentData.appointments.length,
     timeOfFirstAppointment,
     timeOfLastAppointment,
-    totalPayment,
-    totalTips,
-    grandTotal: totalPayment + totalTips,
   };
 
   // page title
@@ -87,15 +79,6 @@ const Statistics = ({ customerData, appointmentData }) => {
         </Typography>
         <Typography className={classes.data} variant="h5">
           Time of the last Appointment: <strong>{statDatas.timeOfLastAppointment}</strong>
-        </Typography>
-        <Typography className={classes.data} variant="h5">
-          Total of Payments: <strong>{displayCurrency(statDatas.totalPayment, "£")}</strong>
-        </Typography>
-        <Typography className={classes.data} variant="h5">
-          Total of Tips: <strong>{displayCurrency(statDatas.totalTips, "£")}</strong>
-        </Typography>
-        <Typography className={classes.data} variant="h5">
-          Grand Total: <strong>{displayCurrency(statDatas.grandTotal, "£")}</strong>
         </Typography>
       </Grid>
     );

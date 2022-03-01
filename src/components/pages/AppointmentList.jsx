@@ -99,8 +99,6 @@ const AppointmentList = ({ customerData, appointmentData }) => {
     { field: "lashLength", headerName: "Length", width: 210 },
     { field: "shape", headerName: "Shape", width: 100 },
     { field: "eyepad", headerName: "Eye Pad", width: 200 },
-    { field: "payment", headerName: "Payment", width: 90, type: "number" },
-    { field: "tips", headerName: "Tips", width: 80, type: "number" },
     { field: "memo", headerName: "Memo", width: 400 },
   ];
 
@@ -155,8 +153,6 @@ const AppointmentList = ({ customerData, appointmentData }) => {
           lashLength: appointment.lashLength.join(),
           shape: appointment.shape,
           eyepad: appointment.eyepad,
-          payment: appointment.payment,
-          tips: appointment.tips,
           memo: appointment.memo,
         };
         return row;

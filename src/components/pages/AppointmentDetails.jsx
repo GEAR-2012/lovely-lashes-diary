@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ProgressCircular from "../UI/ProgressCircular";
-import { formattedTimestamp, displayCurrency } from "../../functions";
+import { formattedTimestamp } from "../../functions";
 import { openDeleteAppModal } from "../../redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -171,8 +171,6 @@ const AppointmentDetails = ({ appointmentData, customerData, deviceData, openDel
             ["Length of Lashes", appointment.lashLength.join()],
             ["Shape of Lashes", appointment.shape],
             ["Eyepad usage", appointment.eyepad],
-            ["Payment", displayCurrency(appointment.payment, "£")],
-            ["Tips", displayCurrency(appointment.tips, "£")],
             ["Appointment Memo", appointment.memo],
           ];
           return detailsArray;

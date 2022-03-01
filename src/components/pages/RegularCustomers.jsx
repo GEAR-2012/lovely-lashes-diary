@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// its determine who is active & who is not
-// const activeMonths = 8;
-
 const RegularCustomers = ({ appointmentData, customerData }) => {
   const classes = useStyles();
   const [appointments, setAppointments] = useState([]);
@@ -57,16 +54,11 @@ const RegularCustomers = ({ appointmentData, customerData }) => {
       customers.forEach((customer) => {
         let loyaltyPoints = 0; // loyalty points
         let appsInInterval = 0; // appointments points
-        let tipsCount = 0;
-        let appCount = 0;
         const now = new Date().getTime();
         // loop appointments
         appointments.forEach((appointment) => {
           // outer loop's customer's appointments
           if (appointment.customerId === customer.customerId) {
-            appCount++;
-            tipsCount += appointment.tips;
-
             // Calculate how many appointments the customer have in the last few months, to determine if the customer active or not.
             const criteria = (365 / 12) * activeMonths; // treshold in days
             const appTime = appointment.timeOfAppointment;
@@ -97,17 +89,12 @@ const RegularCustomers = ({ appointmentData, customerData }) => {
             }
           }
         });
-        let aveTips = 0;
-        if (appCount) {
-          aveTips = Math.round((tipsCount / appCount) * 100) / 100;
-        }
 
         // decide if the customer have enough appointments in an interval
         if (appsInInterval > 0) {
           loyalCustomers.push({
             ...customer,
             loyaltyPoints,
-            aveTips,
           });
         }
       });
@@ -123,7 +110,6 @@ const RegularCustomers = ({ appointmentData, customerData }) => {
   const customerListColumns = [
     { field: "loyaltyPoints", headerName: "Loyalty Points", width: 150 },
     { field: "name", headerName: "Name", width: 150 },
-    { field: "aveTips", headerName: "Tips average (£)", width: 150 },
     { field: "phone", headerName: "Phone" },
     { field: "memo", headerName: "Memo", width: 400 },
   ];
@@ -137,7 +123,6 @@ const RegularCustomers = ({ appointmentData, customerData }) => {
       id: customer.customerId,
       loyaltyPoints: customer.loyaltyPoints,
       name: customer.name,
-      aveTips: customer.aveTips,
       phone: customer.phone,
       memo: customer.memo,
     };

@@ -52,8 +52,6 @@ const App = ({
   appointmentsUnload,
   alertOpen,
   deviceSet,
-  customerData,
-  appointmentData,
 }) => {
   const [isUserVerified, setIsUserVerified] = useState(false);
 
@@ -205,8 +203,6 @@ const App = ({
 const mapStateToProps = (state) => {
   return {
     userData: state.user,
-    customerData: state.customer,
-    appointmentData: state.appointment,
   };
 };
 

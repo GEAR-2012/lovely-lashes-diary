@@ -4,15 +4,12 @@ import MultipleSelect from "../formComponents/MultipleSelect";
 import SingleSelect from "../formComponents/SingleSelect";
 import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import CombiTextfield from "../formComponents/CombiTextfield";
-import Currency from "../formComponents/Currency";
 import ProgressCircular from "../UI/ProgressCircular";
 import {
-  numberToCurrency,
   timestampToDatetimePickerFormat,
   checkIfExists,
   checkTimeOfAppointment,
   checkLashLength,
-  checkCurrency,
   checkMemo,
 } from "../../functions";
 import { makeStyles } from "@mui/styles";
@@ -124,8 +121,6 @@ const AppointmentForm = ({
       lashLength: [],
       shape: "",
       eyepad: "",
-      payment: 0,
-      tips: 0,
       memo: "",
     };
   }, [timeOfLastApp]);
@@ -143,8 +138,6 @@ const AppointmentForm = ({
     lashLength: "",
     shape: "",
     eyepad: "",
-    payment: "",
-    tips: "",
     memo: "",
   };
 
@@ -197,7 +190,6 @@ const AppointmentForm = ({
 
   useEffect(() => {
     const type = inputData.typeOfAppointment;
-    console.log(type);
 
     if (type) {
       if (type === "Tint" || type === "Removal") {
@@ -248,8 +240,6 @@ const AppointmentForm = ({
         lashLength: getAppointmentToUpdate.lashLength,
         shape: getAppointmentToUpdate.shape,
         eyepad: getAppointmentToUpdate.eyepad,
-        payment: getAppointmentToUpdate.payment,
-        tips: getAppointmentToUpdate.tips,
         memo: getAppointmentToUpdate.memo,
       };
 
@@ -319,8 +309,6 @@ const AppointmentForm = ({
         const lashLength = previousAppointment.lashLength;
         const shape = previousAppointment.shape;
         const eyepad = previousAppointment.eyepad;
-        const payment = previousAppointment.payment;
-        const tips = previousAppointment.tips;
         const memo = previousAppointment.memo;
 
         setInputData((prevState) => ({
@@ -335,8 +323,6 @@ const AppointmentForm = ({
           lashLength,
           shape,
           eyepad,
-          payment,
-          tips,
           memo,
         }));
       } else if (!previousAppointment && inputData.customerId) {
@@ -374,8 +360,6 @@ const AppointmentForm = ({
       !inputErrData.lashLength &&
       !inputErrData.shape &&
       !inputErrData.eyepad &&
-      !inputErrData.payment &&
-      !inputErrData.tips &&
       !inputErrData.memo
     ) {
       // if there is data & there is no error
@@ -504,28 +488,6 @@ const AppointmentForm = ({
         setInputErrData((prevState) => ({
           ...prevState,
           eyepad: checkIfExists(inputData.eyepad),
-        }));
-        break;
-      case "payment":
-        // change string value to floating
-        setInputData((prevState) => ({
-          ...prevState,
-          payment: numberToCurrency(prevState.payment),
-        }));
-        setInputErrData((prevState) => ({
-          ...prevState,
-          payment: checkCurrency(numberToCurrency(inputData.payment)),
-        }));
-        break;
-      case "tips":
-        // change string value to floating
-        setInputData((prevState) => ({
-          ...prevState,
-          tips: numberToCurrency(prevState.tips),
-        }));
-        setInputErrData((prevState) => ({
-          ...prevState,
-          tips: checkCurrency(numberToCurrency(inputData.tips)),
         }));
         break;
       case "memo":
@@ -715,27 +677,6 @@ const AppointmentForm = ({
           handleChange={handleInputChange}
           handleBlur={handleInputBlur}
           required={true}
-        />
-        {/* Payment */}
-        <Currency
-          error={inputErrData.payment}
-          label="Payment"
-          name="payment"
-          value={inputData.payment}
-          handleChange={handleInputChange}
-          handleBlur={handleInputBlur}
-          symbol="£"
-          required={true}
-        />
-        {/* Tips */}
-        <Currency
-          error={inputErrData.tips}
-          label="Tips"
-          name="tips"
-          value={inputData.tips}
-          handleChange={handleInputChange}
-          handleBlur={handleInputBlur}
-          symbol="£"
         />
         {/* Memo */}
         <CombiTextfield
